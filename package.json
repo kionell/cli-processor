@@ -1,5 +1,5 @@
 {
-  "name": "command-line-parser",
+  "name": "cli-processor",
   "version": "0.1.0",
   "description": "A basic command line parser for any CLI",
   "main": "./lib/index.js",

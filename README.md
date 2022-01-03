@@ -1,7 +1,7 @@
-# command-line-parser
-[![CodeFactor](https://img.shields.io/codefactor/grade/github/kionell/command-line-parser)](https://www.codefactor.io/repository/github/kionell/command-line-parser)
-[![License](https://img.shields.io/github/license/kionell/command-line-parser)](https://github.com/kionell/command-line-parser/blob/master/LICENSE)
-[![Package](https://img.shields.io/npm/v/command-line-parser)](https://www.npmjs.com/package/command-line-parser)
+# cli-processor
+[![CodeFactor](https://img.shields.io/codefactor/grade/github/kionell/cli-processor)](https://www.codefactor.io/repository/github/kionell/cli-processor)
+[![License](https://img.shields.io/github/license/kionell/cli-processor)](https://github.com/kionell/cli-processor/blob/master/LICENSE)
+[![Package](https://img.shields.io/npm/v/cli-processor)](https://www.npmjs.com/package/cli-processor)
 
 This package is a basic command line parser that can be used to create any CLI.
 
@@ -10,7 +10,7 @@ This package is a basic command line parser that can be used to create any CLI.
 Add a new dependency to your project via npm:
 
 ```bash
-npm install command-line-parser
+npm install cli-processor
 ```
 
 ### Requirements
@@ -31,7 +31,7 @@ Bellow you can find a few examples that will show you how to use this package.
 ### Creating simple help command
 
 ```js
-import { Command, Argument } from 'command-line-parser';
+import { Command, Argument } from 'cli-processor';
 
 export default new Command({
   name: 'help',
@@ -57,7 +57,7 @@ export default new Command({
 ### Creating prefix command
 
 ```js
-import { Command, Argument, Flag } from 'command-line-parser';
+import { Command, Argument, Flag } from 'cli-processor';
 
 const command = new Command({
   name: 'prefix',
@@ -153,7 +153,7 @@ export default command;
 ### Parsing command line
 
 ```js
-import { CommandParser } from 'command-line-parser';
+import { CommandParser } from 'cli-processor';
 import { HelpCommand, PrefixCommand } from './commands';
 
 const parser = new CommandParser({
@@ -205,7 +205,7 @@ const data4 = parser.parse('');
 
 ## Documentation
 
-Auto-generated documentation is available [here](https://kionell.github.io/command-line-parser/).
+Auto-generated documentation is available [here](https://kionell.github.io/cli-processor/).
 
 ## Contributing
 
