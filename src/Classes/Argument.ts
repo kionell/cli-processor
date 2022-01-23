@@ -52,11 +52,19 @@ export class Argument implements IArgument, ICloneable, IComparable, IStringable
     return this.values.join(' ');
   }
 
+  set value(val: string) {
+    this.values = val?.split(' ') ?? this.values;
+  }
+
   /**
    * Actual length of the argument.
    */
   get length(): number {
     return this.values.length;
+  }
+
+  set length(val: number) {
+    this.values.length = Math.max(0, Math.min(this.values.length, val));
   }
 
   /**
