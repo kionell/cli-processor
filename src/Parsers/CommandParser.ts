@@ -95,9 +95,11 @@ export class CommandParser {
     }
 
     /**
-     * Convert string to lower case to remove case sensitivity.
+     * Ignore empty commands or commands that don't start with a prefix.
      */
-    if (!this._caseSensitive) input = input.toLowerCase();
+    if (input.length <= 0 || !this._hasPrefix(input)) {
+      return new CommandData();
+    }
 
     /**
      * Combine double quotes into one arg and split all args by space.
