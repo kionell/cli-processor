@@ -153,14 +153,9 @@ export class CommandParser {
     const data = new CommandData();
 
     /**
-     * Ignore empty commands or commands that don't start with a prefix.
-     */
-    if (args.length < 0 || !this._hasPrefix(args[0])) return data;
-
-    /**
      * Build a command tree.
      */
-    this._buildCommandTree(args.slice(), data.tree, this._commands);
+    this._buildCommandTree(args, data.tree, this._commands);
 
     if (data.tree.levels > 0) {
       /**
@@ -172,8 +167,6 @@ export class CommandParser {
        * Parse flags and args and save them to the command data.
        * We need to mutate args after flag parsing!
        */
-      args = args.slice(data.tree.levels);
-
       last.flags = this._getFlags(args, last);
       last.arg = this._getArg(args.filter((x) => x), last);
     }
@@ -191,18 +184,22 @@ export class CommandParser {
    * @param parent The list of commands at higher level.
    */
   private _buildCommandTree(args: string[], tree: CommandTree, parent?: Map<string, ICommand>): void {
-    const first = args.shift() ?? '';
-
     if (!parent) return;
 
+    /**
+     * Check if the first argument is a command.
+     */
+    const first = args[0].toLowerCase() ?? '';
     const command = this._getCommand(first, parent);
 
     if (!command) return;
 
-    /**
-     * Add next level command to the tree.
-     */
     tree.add(command);
+
+    /**
+     * Remove first argument and mutate array.
+     */
+    args.shift();
 
     /**
      * Check for the subcommands.
