@@ -212,7 +212,7 @@ export class CommandParser {
    * @param first The first argument of the args list.
    * @param commands The list of commands at the current level.
    * @throws If command not found. 
-   * @returns The found command.
+   * @returns The found command or null.
    */
   private _getCommand(first: string, commands: Map<string, ICommand>): Command | null {
     if (!first) {
@@ -280,7 +280,17 @@ export class CommandParser {
 
     for (const command of commands.values()) {
       if (command.name === input || command.aliases.includes(input)) {
-        return command as Command;
+        const original = command as Command;
+        const cloned = original.clone();
+
+        /**
+         * Reset current command argument.
+         */
+        if (cloned.arg) {
+          cloned.arg.length = 0;
+        }
+
+        return cloned;
       }
     }
 
