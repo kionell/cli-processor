@@ -137,7 +137,11 @@ export class CommandParser {
      */
     args = args.map((arg) => arg.replace(/(?<!\\)"/gm, '').replace(/\\/g, ''));
 
-    return this._getCommandData(args);
+    const data = this._getCommandData(args);
+
+    data.raw = input;
+
+    return data;
   }
 
   /**
