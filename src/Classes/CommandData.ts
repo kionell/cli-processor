@@ -19,6 +19,11 @@ export class CommandData {
   tree: CommandTree = new CommandTree();
 
   /**
+   * Raw command line text.
+   */
+  private _raw = '';
+
+  /**
    * The command name.
    */
   get name(): string {
@@ -48,6 +53,14 @@ export class CommandData {
 
   get isValid(): boolean {
     return this.name !== '' && this.tree.levels > 0;
+  }
+
+  get raw(): string {
+    return this._raw;
+  }
+
+  set raw(val: string) {
+    this._raw = val ?? this._raw;
   }
 
   toString(): string {
