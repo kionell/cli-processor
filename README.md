@@ -13,10 +13,6 @@ Add a new dependency to your project via npm:
 npm install cli-processor
 ```
 
-### Requirements
-
-Since this project uses ES Modules, it is recommended to use Node.js 12.22.0 or newer.
-
 ## How does it work
 
 Instance of command parser requires a list of compatible commands to process command line.
