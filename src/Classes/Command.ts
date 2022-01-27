@@ -44,7 +44,9 @@ export class Command implements ICommand, ICloneable, IComparable, IStringable {
   /**
    * The command execute function.
    */
-  execute: (...args: any[]) => any = () => void 0;
+  execute(...args: any[]): any {
+    return args;
+  }
 
   /**
    * Creates a new instance of a command.
