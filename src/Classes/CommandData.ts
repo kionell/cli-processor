@@ -48,7 +48,10 @@ export class CommandData {
    * Command line execute function.
    */
   get execute(): ((...args: any[]) => any) | null {
-    return this.tree.last?.execute ?? null;
+    /**
+     * Bind command context to the command.
+     */
+    return this.tree.last?.execute.bind(this.tree.last) ?? null;
   }
 
   get isValid(): boolean {
