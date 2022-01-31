@@ -1,4 +1,10 @@
-import { ICommand, ICloneable, IComparable, IStringable } from '../Interfaces';
+import {
+  ICommand,
+  ICloneable,
+  IComparable,
+  IStringable,
+} from '../Interfaces';
+
 import { Argument } from './Argument';
 import { Flag } from './Flag';
 
@@ -34,7 +40,7 @@ export class Command implements ICommand, ICloneable, IComparable, IStringable {
   /**
    * The command flags.
    */
-  flags?: Set<Flag>;
+  flags?: Map<string, Flag>;
 
   /**
    * The dictionary with subcommands.
@@ -92,7 +98,7 @@ export class Command implements ICommand, ICloneable, IComparable, IStringable {
     if (this.arg !== other.arg) return false;
 
     if (this.flags && other.flags) {
-      for (const flag of this.flags.values()) {
+      for (const flag of this.flags.keys()) {
         if (!other.flags.has(flag)) return false;
       }
     }

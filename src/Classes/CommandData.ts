@@ -40,8 +40,8 @@ export class CommandData {
   /**
    * The command flags.
    */
-  get flags(): Set<Flag> {
-    return this.tree.last?.flags ?? new Set<Flag>();
+  get flags(): Map<string, Flag> {
+    return this.tree.last?.flags ?? new Map<string, Flag>();
   }
 
   /**

@@ -32,7 +32,7 @@ export interface ICommand {
   /**
    * The command flags.
    */
-  flags?: Set<Flag>;
+  flags?: Map<string, Flag>;
 
   /**
    * The dictionary with subcommands.
