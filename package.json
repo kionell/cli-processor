@@ -1,6 +1,6 @@
 {
   "name": "cli-processor",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A basic command line parser for any CLI",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
