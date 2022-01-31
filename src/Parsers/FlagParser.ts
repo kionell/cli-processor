@@ -33,7 +33,7 @@ export class FlagParser {
   /**
    * The list of all command flags.
    */
-  private _flags: Set<Flag>;
+  private _flags: Map<string, Flag>;
 
   /**
    * Creates a new instance of a flag parser.
@@ -45,14 +45,14 @@ export class FlagParser {
     this._command = options.command;
     this._shortPrefix = options.shortPrefix ?? this._shortPrefix;
     this._fullPrefix = options.fullPrefix ?? this._fullPrefix;
-    this._flags = options.command?.flags ?? new Set<Flag>();
+    this._flags = options.command?.flags ?? new Map<string, Flag>();
   }
 
   /**
    * @returns Parsed command flags of the current command level.
    */
-  parse(): Set<Flag> {
-    const parsed: Set<Flag> = new Set<Flag>();
+  parse(): Map<string, Flag> {
+    const parsed: Map<string, Flag> = new Map();
     const positions = this._findFlagPositions();
     const cmdMinLength = this._command.arg?.isRequired
       ? this._command.arg?.minLength ?? 0 : 0;
@@ -106,7 +106,7 @@ export class FlagParser {
         return;
       }
 
-      parsed.add(clonedFlag);
+      parsed.set(clonedFlag.name, clonedFlag);
     });
 
     return parsed;

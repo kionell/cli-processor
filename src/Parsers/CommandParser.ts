@@ -241,7 +241,7 @@ export class CommandParser {
    * @param command Current command object.
    * @return Parsed command flags of the current command level.
    */
-  private _getFlags(args: string[], command: Command): Set<Flag> {
+  private _getFlags(args: string[], command: Command): Map<string, Flag> {
     const options = {
       shortPrefix: this._shortFlagPrefix,
       fullPrefix: this._fullFlagPrefix,
