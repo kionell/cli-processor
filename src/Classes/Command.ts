@@ -71,21 +71,34 @@ export class Command implements ICommand, ICloneable, IComparable, IStringable {
   }
 
   clone(): Command {
-    const entries = [...this.subcommands?.entries() ?? []];
-    const cloned = entries.map((entry) => {
-      return [entry[0], entry[1].clone()] as [string, Command];
-    });
+    const TypedCommand = this.constructor as new (params: Partial<ICommand>) => this;
 
-    return new Command({
+    const command = new TypedCommand({
       name: this.name,
       title: this.title,
       aliases: this.aliases.slice(),
       description: this.description,
       arg: this.arg?.clone() ?? null,
-      flags: this.flags && new Set([...this.flags].map((f) => f.clone())),
-      subcommands: this.subcommands && new Map<string, Command>(cloned),
       execute: this.execute,
     });
+
+    if (this.flags) {
+      command.flags = new Map();
+
+      this.flags?.forEach((entry) => {
+        command.flags?.set(entry.name, entry.clone());
+      });
+    }
+
+    if (this.subcommands) {
+      command.subcommands = new Map();
+
+      this.subcommands?.forEach((entry) => {
+        command.subcommands?.set(entry.name, entry.clone());
+      });
+    }
+
+    return command;
   }
 
   equals(other: Command): boolean {
