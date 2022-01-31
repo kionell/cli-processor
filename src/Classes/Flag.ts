@@ -16,11 +16,6 @@ export class Flag implements IFlag, ICloneable, IComparable, IStringable {
   shortName = '';
 
   /**
-   * The flag title.
-   */
-  title = '';
-
-  /**
    * The flag description.
    */
   description = '';
@@ -50,7 +45,6 @@ export class Flag implements IFlag, ICloneable, IComparable, IStringable {
     return new Flag({
       name: this.name,
       shortName: this.shortName,
-      title: this.title,
       description: this.description,
       arg: this.arg?.clone() ?? null,
     });

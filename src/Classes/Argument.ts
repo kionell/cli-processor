@@ -5,11 +5,6 @@ import { IArgument, ICloneable, IComparable, IStringable } from '../Interfaces';
  */
 export class Argument implements IArgument, ICloneable, IComparable, IStringable {
   /**
-   * The argument title.
-   */
-  title = '';
-
-  /**
    * The argument description.
    */
   description = '';
@@ -91,7 +86,6 @@ export class Argument implements IArgument, ICloneable, IComparable, IStringable
 
   clone(): Argument {
     return new Argument({
-      title: this.title,
       description: this.description,
       values: this.values.slice(),
       isRequired: this.isRequired,

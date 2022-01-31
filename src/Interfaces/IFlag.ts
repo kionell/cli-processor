@@ -15,11 +15,6 @@ export interface IFlag {
   shortName: string;
 
   /**
-   * The flag title.
-   */
-  title: string;
-
-  /**
    * The flag description.
    */
   description: string;

@@ -3,11 +3,6 @@
  */
 export interface IArgument {
   /**
-   * The argument title.
-   */
-  title: string;
-
-  /**
    * The argument description.
    */
   description: string;
