@@ -54,10 +54,16 @@ export class CommandData {
     return this.tree.last?.execute.bind(this.tree.last) ?? null;
   }
 
+  /**
+   * Whether the command data is valid or not.
+   */
   get isValid(): boolean {
     return this.name !== '' && this.tree.levels > 0;
   }
 
+  /**
+   * Raw command line data.
+   */
   get raw(): string {
     return this._raw;
   }
