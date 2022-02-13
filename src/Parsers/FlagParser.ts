@@ -43,25 +43,29 @@ export class FlagParser {
   }
 
   /**
+   * Takes a string and collects command flags from it.
+   * @param input Command line.
    * @returns Parsed command flags of the current command level.
    */
-  parse(): Map<string, Flag> {
+  parse(input: string): Map<string, Flag> {
+    const args = input?.split(' ') ?? [];
+
     const parsed: Map<string, Flag> = new Map();
-    const positions = this._findFlagPositions();
-    const cmdMinLength = this._command.arg?.isRequired
-      ? this._command.arg?.minLength ?? 0 : 0;
+    const positions = this._findFlagPositions(args);
+    const cmdMinLength = this._command?.arg?.isRequired
+      ? this._command?.arg?.minLength ?? 0 : 0;
 
     positions.forEach((currentFlag, currentPos) => {
       const clonedFlag = currentFlag.clone();
 
-      const possibleArgs = this._args.length - currentPos;
+      const possibleArgs = args.length - currentPos;
       const flagMinLength = clonedFlag.arg?.minLength ?? 0;
       const flagMaxLength = clonedFlag.arg?.maxLength ?? 0;
 
       /**
        * Replace flag name with empty string.
        */
-      this._args[currentPos] = '';
+      args[currentPos] = '';
 
       /**
        * Collecting the flag arguments. We go through all arguments 
@@ -81,12 +85,12 @@ export class FlagParser {
 
         if (isEndOfFlag || isCollected || isOnMinimum) break;
 
-        clonedFlag.arg?.values.push(this._args[currentPos]);
+        clonedFlag.arg?.values.push(args[currentPos]);
 
         /**
          * Replace flag arg with empty string.
          */
-        this._args[currentPos] = '';
+        args[currentPos] = '';
       }
 
       /**
@@ -106,10 +110,29 @@ export class FlagParser {
     return parsed;
   }
 
-  private _findFlagPositions(): Map<number, Flag> {
+  /**
+   * Removes flags from command line.
+   * @param input Command line.
+   * @param flags Preprocessed flags.
+   * @returns Command line with no flags.
+   */
+  getCommandLineWithoutFlags(input: string, flags?: Map<string, Flag>): string {
+    flags ??= this.parse(input);
+
+    flags.forEach((flag) => {
+      input = input.replace(flag.toString(), '');
+    });
+
+    return input
+      .split(' ')
+      .filter((x) => x)
+      .join(' ');
+  }
+
+  private _findFlagPositions(args: string[]): Map<number, Flag> {
     const positions: Map<number, Flag> = new Map<number, Flag>();
 
-    this._args.forEach((arg, index) => {
+    args.forEach((arg, index) => {
       const flag = this._getFlagByNameOrAlias(arg);
 
       if (flag) positions.set(index, flag);
