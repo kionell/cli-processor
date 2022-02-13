@@ -17,5 +17,5 @@ export interface IArgumentParserOptions {
   /**
    * The command which will be used to parse arguments.
    */
-  command: Command;
+  command?: Command | null;
 }

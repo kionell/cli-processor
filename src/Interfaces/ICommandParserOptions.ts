@@ -22,7 +22,7 @@ export interface ICommandParserOptions {
   /**
    * A dictionary with all existing commands.
    */
-  commandList?: Map<string, ICommand>;
+  commandList?: Map<string, ICommand> | null;
 
   /**
    * Whether to throw error while parsing or not.
