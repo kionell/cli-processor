@@ -10,6 +10,11 @@ export interface IArgumentParserOptions {
   throwError?: boolean;
 
   /**
+   * Should too many arguments be allowed or not?
+   */
+  allowTooManyArgs?: boolean;
+
+  /**
    * The raw args that will be parsed.
    */
   args: string[];

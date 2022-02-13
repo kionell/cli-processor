@@ -11,6 +11,11 @@ export class ArgumentParser {
   private _throwError = true;
 
   /**
+   * Should too many arguments be allowed or not?
+   */
+  private _allowTooManyArgs = false;
+
+  /**
    * The raw args that will be parsed;
    */
   private _args: string[] = [];
@@ -71,7 +76,7 @@ export class ArgumentParser {
     /**
      * Throw an error if there are too many arguments.
      */
-    if (this._args.length > maxLength) {
+    if (!this._allowTooManyArgs && this._args.length > maxLength) {
       if (this._throwError) {
         throw new Error('Too many arguments!');
       }

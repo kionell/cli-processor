@@ -190,14 +190,15 @@ const data4 = parser.parse('');
 
 ## Command parser options
 
-|       Name      |                              Description                             |          Type         | Optional | Default value |
-|:---------------:|:--------------------------------------------------------------------:|:---------------------:|:--------:|:-------------:|
-| commandPrefix   | A command prefix that will be considered by this parser.             |         string        |    Yes   |       ''      |
-| shortFlagPrefix | A prefix of a shortened flag that will be considered by this parser. |         string        |    Yes   |      '-'      |
-| fullFlagPrefix  | A prefix of a full flag that will be considered by this parser.      |         string        |    Yes   |      '--'     |
-| commandList     | A dictionary with all existing commands.                             | Map<string, ICommand> |    Yes   |     Map()     |
-| throwError      | Whether to throw error while parsing or not.                         |        boolean        |    Yes   |      true     |
-| caseSensitive   | Are commands case sensitive or not?                                  |        boolean        |    Yes   |     false     |
+|       Name       |                              Description                             |          Type         | Optional | Default value |
+|:----------------:|:--------------------------------------------------------------------:|:---------------------:|:--------:|:-------------:|
+| commandPrefix    | A command prefix that will be considered by this parser.             |         string        |    Yes   |       ''      |
+| shortFlagPrefix  | A prefix of a shortened flag that will be considered by this parser. |         string        |    Yes   |      '-'      |
+| fullFlagPrefix   | A prefix of a full flag that will be considered by this parser.      |         string        |    Yes   |      '--'     |
+| commandList      | A dictionary with all existing commands.                             | Map<string, ICommand> |    Yes   |     Map()     |
+| throwError       | Whether to throw error while parsing or not.                         |        boolean        |    Yes   |      true     |
+| allowTooManyArgs | Should too many arguments be allowed or not?                         |        boolean        |    Yes   |     false     |
+| caseSensitive    | Are commands case sensitive or not?                                  |        boolean        |    Yes   |     false     |
 
 ## Documentation
 

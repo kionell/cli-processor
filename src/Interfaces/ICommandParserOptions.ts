@@ -30,6 +30,11 @@ export interface ICommandParserOptions {
   throwError?: boolean;
 
   /**
+   * Should too many arguments be allowed or not?
+   */
+  allowTooManyArgs?: boolean;
+
+  /**
    * Are commands case sensitive?
    */
   caseSensitive?: boolean;

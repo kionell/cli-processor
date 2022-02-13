@@ -31,12 +31,17 @@ export class CommandParser {
   private _fullFlagPrefix = '--';
 
   /**
-   * Whether to throw error or not.
+   * Whether to throw error or not. Throw errors by default.
    */
   private _throwError = true;
 
   /**
-   * Are commands case sensitive?
+   * Should too many arguments be allowed or not?
+   */
+  private _allowTooManyArgs = false;
+
+  /**
+   * Are commands case sensitive? Use non-sensitive parsing by default.
    */
   private _caseSensitive = false;
 
@@ -57,19 +62,9 @@ export class CommandParser {
       return;
     }
 
-    /**
-     * Use exclamation mark as a default prefix. 
-     */
     this._prefix = options?.commandPrefix ?? this._prefix;
-
-    /**
-     * Throw errors by default.
-     */
     this._throwError = options?.throwError ?? this._throwError;
-
-    /**
-     * Use non-sensitive parsing by default.
-     */
+    this._allowTooManyArgs = options?.allowTooManyArgs ?? this._allowTooManyArgs;
     this._caseSensitive = options?.caseSensitive ?? this._caseSensitive;
 
     this._shortFlagPrefix = options?.shortFlagPrefix ?? this._shortFlagPrefix;
