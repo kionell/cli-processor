@@ -2,8 +2,6 @@ import {
   Command,
   CommandData,
   CommandTree,
-  Argument,
-  Flag,
 } from '../Classes';
 
 import { ICommand, ICommandParserOptions } from '../Interfaces';
@@ -158,12 +156,14 @@ export class CommandParser {
        */
       const last = data.tree.last as Command;
 
-      /**
-       * Parse flags and args and save them to the command data.
-       * We need to mutate args after flag parsing!
-       */
-      last.flags = this._getFlags(args, last);
-      last.arg = this._getArg(args.filter((x) => x), last);
+      const flagParser = this._getFlagParser(last);
+      const argParser = this._getArgParser(last);
+
+      const target = args.join(' ');
+      const targetWithNoFlags = flagParser.getCommandLineWithoutFlags(target);
+
+      last.flags = flagParser.parse(target);
+      last.arg = argParser.parse(targetWithNoFlags);
     }
 
     data.prefix = this._prefix;
@@ -231,37 +231,33 @@ export class CommandParser {
   }
 
   /**
-   * Parses command flags for the current level.
-   * @param args the list of arguments.
+   * Creates a new instance of the flag parser for the command.
    * @param command Current command object.
-   * @return Parsed command flags of the current command level.
+   * @return The flag parser of the current command.
    */
-  private _getFlags(args: string[], command: Command): Map<string, Flag> {
+  private _getFlagParser(command: Command): FlagParser {
     const options = {
       shortPrefix: this._shortFlagPrefix,
       fullPrefix: this._fullFlagPrefix,
       throwError: this._throwError,
       command,
-      args,
     };
 
-    return new FlagParser(options).parse();
+    return new FlagParser(options);
   }
 
   /**
-   * Parses command arguments for the current command level.
-   * @param args the list of arguments.
+   * Creates a new instance of the argument parser for the command.
    * @param command Current command object.
-   * @return Parsed command arguments of the current command level.
+   * @return The argument parser of the current command.
    */
-  private _getArg(args: string[], command: Command): Argument | null {
+  private _getArgParser(command: Command): ArgumentParser {
     const options = {
       throwError: this._throwError,
-      args,
       command,
     };
 
-    return new ArgumentParser(options).parse();
+    return new ArgumentParser(options);
   }
 
   /**
