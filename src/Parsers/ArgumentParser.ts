@@ -16,24 +16,19 @@ export class ArgumentParser {
   private _allowTooManyArgs = false;
 
   /**
-   * The raw args that will be parsed;
-   */
-  private _args: string[] = [];
-
-  /**
    * The command which will be used to parse arguments.
    */
-  private _command: Command;
+  private _command: Command | null = null;
 
   /**
    * Creates a new instance of an argument parser.
    * @param options The argument parser options.
    * @constructor
    */
-  constructor(options: IArgumentParserOptions) {
-    this._throwError = options.throwError ?? this._throwError;
-    this._args = options.args?.slice() ?? this._args;
-    this._command = options.command;
+  constructor(options?: IArgumentParserOptions) {
+    this._throwError = options?.throwError ?? this._throwError;
+    this._allowTooManyArgs = options?.allowTooManyArgs ?? this._allowTooManyArgs;
+    this._command = options?.command ?? this._command;
   }
 
   /**

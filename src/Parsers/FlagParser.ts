@@ -11,14 +11,9 @@ export class FlagParser {
   private _throwError = true;
 
   /**
-   * The raw args that will be parsed;
-   */
-  private _args: string[] = [];
-
-  /**
    * The command which will be used to parse arguments.
    */
-  private _command: Command;
+  private _command: Command | null = null;
 
   /** 
    * The prefix of a shortened flag.
@@ -39,13 +34,12 @@ export class FlagParser {
    * Creates a new instance of a flag parser.
    * @param options The flag parser options.
    */
-  constructor(options: IFlagParserOptions) {
-    this._throwError = options.throwError ?? this._throwError;
-    this._args = options.args ?? this._args;
-    this._command = options.command;
-    this._shortPrefix = options.shortPrefix ?? this._shortPrefix;
-    this._fullPrefix = options.fullPrefix ?? this._fullPrefix;
-    this._flags = options.command?.flags ?? new Map<string, Flag>();
+  constructor(options?: IFlagParserOptions) {
+    this._throwError = options?.throwError ?? this._throwError;
+    this._shortPrefix = options?.shortPrefix ?? this._shortPrefix;
+    this._fullPrefix = options?.fullPrefix ?? this._fullPrefix;
+    this._command = options?.command ?? this._command;
+    this._flags = this._command?.flags ?? new Map<string, Flag>();
   }
 
   /**
