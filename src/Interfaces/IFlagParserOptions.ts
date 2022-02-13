@@ -12,12 +12,12 @@ export interface IFlagParserOptions {
   /** 
    * The prefix of a shortened flag.
    */
-  shortPrefix: string,
+  shortPrefix?: string,
 
   /**
    * The prefix of a full flag.
    */
-  fullPrefix: string,
+  fullPrefix?: string,
 
   /**
    * The command which will be used to parse arguments.
