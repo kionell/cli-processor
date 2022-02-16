@@ -117,7 +117,13 @@ export class FlagParser {
     flags ??= this.parse(input);
 
     flags.forEach((flag) => {
-      input = input.replace(flag.toString(), '');
+      const shortFlag = this._shortPrefix + flag.shortName;
+      const fullFlag = this._fullPrefix + flag.name;
+      const args = flag.arg?.values.join(' ');
+
+      const regex = new RegExp(`(${shortFlag}|${fullFlag})( ${args}){0,1}`);
+
+      input = input.replace(regex, '');
     });
 
     return input.trim();
