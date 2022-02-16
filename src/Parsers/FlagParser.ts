@@ -112,6 +112,8 @@ export class FlagParser {
    * @returns Command line with no flags.
    */
   getCommandLineWithoutFlags(input: string, flags?: Map<string, Flag>): string {
+    input = removeDoubleQuotes(input);
+
     flags ??= this.parse(input);
 
     flags.forEach((flag) => {
