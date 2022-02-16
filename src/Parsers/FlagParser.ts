@@ -120,10 +120,7 @@ export class FlagParser {
       input = input.replace(flag.toString(), '');
     });
 
-    return input
-      .split(' ')
-      .filter((x) => x)
-      .join(' ');
+    return input.trim();
   }
 
   private _findFlagPositions(args: string[]): Map<number, Flag> {
