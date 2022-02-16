@@ -223,6 +223,7 @@ export class CommandParser {
   private _getArgParser(command: Command): ArgumentParser {
     const options = {
       throwError: this._throwError,
+      allowTooManyArgs: this._allowTooManyArgs,
       command,
     };
 
