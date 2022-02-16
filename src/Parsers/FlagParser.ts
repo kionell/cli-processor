@@ -59,14 +59,13 @@ export class FlagParser {
     positions.forEach((currentFlag, currentPos) => {
       const clonedFlag = currentFlag.clone();
 
-      const possibleArgs = args.length - currentPos;
+      /**
+       * Possible args are starting from the current flag position.
+       * We need to subtract 1 to skip the flag itself.
+       */
+      const possibleArgs = args.length - currentPos - 1;
       const flagMinLength = clonedFlag.arg?.minLength ?? 0;
       const flagMaxLength = clonedFlag.arg?.maxLength ?? 0;
-
-      /**
-       * Replace flag name with empty string.
-       */
-      args[currentPos] = '';
 
       /**
        * Collecting the flag arguments. We go through all arguments 
@@ -87,11 +86,6 @@ export class FlagParser {
         if (isEndOfFlag || isCollected || isOnMinimum) break;
 
         clonedFlag.arg?.values.push(args[currentPos]);
-
-        /**
-         * Replace flag arg with empty string.
-         */
-        args[currentPos] = '';
       }
 
       /**
