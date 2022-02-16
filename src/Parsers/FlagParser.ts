@@ -1,5 +1,6 @@
 import { Flag, Command } from '../Classes';
 import { IFlagParserOptions } from '../Interfaces';
+import { removeDoubleQuotes, splitByDoubleQuotes } from '../Utils';
 
 /**
  * A flag parser.
@@ -48,7 +49,7 @@ export class FlagParser {
    * @returns Parsed command flags of the current command level.
    */
   parse(input: string): Map<string, Flag> {
-    const args = input?.split(' ') ?? [];
+    const args = splitByDoubleQuotes(input);
 
     const parsed: Map<string, Flag> = new Map();
     const positions = this._findFlagPositions(args);

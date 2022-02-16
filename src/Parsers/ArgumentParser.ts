@@ -1,5 +1,6 @@
 import { Argument, Command } from '../Classes';
 import { IArgumentParserOptions } from '../Interfaces';
+import { splitByDoubleQuotes } from '../Utils';
 
 /**
  * An argument parser.
@@ -37,7 +38,7 @@ export class ArgumentParser {
    * @returns Parsed command args of the current command level or null.
    */
   parse(input: string): Argument | null {
-    const args = input?.split(' ') ?? [];
+    const args = splitByDoubleQuotes(input);
 
     if (!this._validateArgs(args)) return null;
 
