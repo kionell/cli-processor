@@ -1,10 +1,10 @@
-import { IFlag, ICloneable, IComparable, IStringable } from '../Interfaces';
+import { IFlag } from '../Interfaces';
 import { Argument } from './Argument';
 
 /**
  * A command flag.
  */
-export class Flag implements IFlag, ICloneable, IComparable, IStringable {
+export class Flag implements IFlag {
   /**
    * The flag name.
    */

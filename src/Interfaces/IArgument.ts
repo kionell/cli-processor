@@ -1,7 +1,13 @@
+import {
+  ICloneable,
+  IStringable,
+  IComparable,
+} from './Types';
+
 /**
  * An argument.
  */
-export interface IArgument {
+export interface IArgument extends ICloneable, IStringable, IComparable {
   /**
    * The argument description.
    */

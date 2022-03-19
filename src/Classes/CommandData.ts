@@ -1,5 +1,4 @@
-import { Argument } from './Argument';
-import { Flag } from './Flag';
+import { IArgument, IFlag } from '../Interfaces';
 import { CommandTree } from './CommandTree';
 
 export class CommandData {
@@ -33,15 +32,15 @@ export class CommandData {
   /**
    * The command arg.
    */
-  get arg(): Argument | null {
+  get arg(): IArgument | null {
     return this.tree.last?.arg ?? null;
   }
 
   /**
    * The command flags.
    */
-  get flags(): Map<string, Flag> {
-    return this.tree.last?.flags ?? new Map<string, Flag>();
+  get flags(): Map<string, IFlag> {
+    return this.tree.last?.flags ?? new Map<string, IFlag>();
   }
 
   /**

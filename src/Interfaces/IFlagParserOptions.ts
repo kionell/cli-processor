@@ -1,4 +1,4 @@
-import { Command } from '../Classes';
+import { ICommand } from './ICommand';
 
 /**
  * The options of an argument parser instance.
@@ -22,5 +22,5 @@ export interface IFlagParserOptions {
   /**
    * The command which will be used to parse arguments.
    */
-  command?: Command | null,
+  command?: ICommand | null,
 }

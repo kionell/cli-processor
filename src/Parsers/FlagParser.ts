@@ -1,5 +1,5 @@
-import { Flag, Command } from '../Classes';
-import { IFlagParserOptions } from '../Interfaces';
+import { Flag } from '../Classes';
+import { IFlag, ICommand, IFlagParserOptions } from '../Interfaces';
 import { removeDoubleQuotes, splitByDoubleQuotes } from '../Utils';
 
 /**
@@ -14,7 +14,7 @@ export class FlagParser {
   /**
    * The command which will be used to parse arguments.
    */
-  private _command: Command | null = null;
+  private _command: ICommand | null = null;
 
   /** 
    * The prefix of a shortened flag.
@@ -29,7 +29,7 @@ export class FlagParser {
   /**
    * The list of all command flags.
    */
-  private _flags: Map<string, Flag>;
+  private _flags: Map<string, IFlag>;
 
   /**
    * Creates a new instance of a flag parser.
@@ -40,7 +40,7 @@ export class FlagParser {
     this._shortPrefix = options?.shortPrefix ?? this._shortPrefix;
     this._fullPrefix = options?.fullPrefix ?? this._fullPrefix;
     this._command = options?.command ?? this._command;
-    this._flags = this._command?.flags ?? new Map<string, Flag>();
+    this._flags = this._command?.flags ?? new Map<string, IFlag>();
   }
 
   /**
@@ -48,16 +48,16 @@ export class FlagParser {
    * @param input Command line.
    * @returns Parsed command flags of the current command level.
    */
-  parse(input: string): Map<string, Flag> {
+  parse(input: string): Map<string, IFlag> {
     const args = splitByDoubleQuotes(input);
 
-    const parsed: Map<string, Flag> = new Map();
+    const parsed: Map<string, IFlag> = new Map();
     const positions = this._findFlagPositions(args);
     const cmdMinLength = this._command?.arg?.isRequired
       ? this._command?.arg?.minLength ?? 0 : 0;
 
     positions.forEach((currentFlag, currentPos) => {
-      const clonedFlag = currentFlag.clone();
+      const clonedFlag = currentFlag.clone() as Flag;
 
       /**
        * Possible args are starting from the current flag position.
@@ -111,7 +111,7 @@ export class FlagParser {
    * @param flags Preprocessed flags.
    * @returns Command line with no flags.
    */
-  getCommandLineWithoutFlags(input: string, flags?: Map<string, Flag>): string {
+  getCommandLineWithoutFlags(input: string, flags?: Map<string, IFlag>): string {
     input = removeDoubleQuotes(input);
 
     flags ??= this.parse(input);
@@ -129,8 +129,8 @@ export class FlagParser {
     return input.trim();
   }
 
-  private _findFlagPositions(args: string[]): Map<number, Flag> {
-    const positions: Map<number, Flag> = new Map<number, Flag>();
+  private _findFlagPositions(args: string[]): Map<number, IFlag> {
+    const positions: Map<number, IFlag> = new Map<number, IFlag>();
 
     args.forEach((arg, index) => {
       const flag = this._getFlagByNameOrAlias(arg);
@@ -146,7 +146,7 @@ export class FlagParser {
    * @param input Command name or alias.
    * @return The found command or null.
    */
-  private _getFlagByNameOrAlias(input: string): Flag | null {
+  private _getFlagByNameOrAlias(input: string): IFlag | null {
     const hasShortPrefix = this._hasShortPrefix(input);
     const hasFullPrefix = this._hasFullPrefix(input);
 

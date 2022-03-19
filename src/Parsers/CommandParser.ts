@@ -123,7 +123,7 @@ export class CommandParser {
       /**
        * Get last level of a tree.
        */
-      const last = data.tree.last as Command;
+      const last = data.tree.last as ICommand;
 
       const flagParser = this._getFlagParser(last);
       const argParser = this._getArgParser(last);
@@ -178,7 +178,7 @@ export class CommandParser {
    * @throws If command not found. 
    * @returns The found command or null.
    */
-  private _getCommand(first: string, commands: Map<string, ICommand>): Command | null {
+  private _getCommand(first: string, commands: Map<string, ICommand>): ICommand | null {
     if (!first) {
       if (this._throwError) {
         throw new Error('No command/subcommand was specified!');
@@ -204,7 +204,7 @@ export class CommandParser {
    * @param command Current command object.
    * @return The flag parser of the current command.
    */
-  private _getFlagParser(command: Command): FlagParser {
+  private _getFlagParser(command: ICommand): FlagParser {
     const options = {
       shortPrefix: this._shortFlagPrefix,
       fullPrefix: this._fullFlagPrefix,
@@ -220,7 +220,7 @@ export class CommandParser {
    * @param command Current command object.
    * @return The argument parser of the current command.
    */
-  private _getArgParser(command: Command): ArgumentParser {
+  private _getArgParser(command: ICommand): ArgumentParser {
     const options = {
       throwError: this._throwError,
       allowTooManyArgs: this._allowTooManyArgs,
@@ -236,13 +236,12 @@ export class CommandParser {
    * @param commands The list of commands at the current level.
    * @return The found command or null.
    */
-  private _getCommandByNameOrAlias(input: string, commands: Map<string, ICommand>): Command | null {
+  private _getCommandByNameOrAlias(input: string, commands: Map<string, ICommand>): ICommand | null {
     input = this._removePrefix(input);
 
     for (const command of commands.values()) {
       if (command.name === input || command.aliases.includes(input)) {
-        const original = command as Command;
-        const cloned = original.clone();
+        const cloned = command.clone() as Command;
 
         /**
          * Reset current command argument.

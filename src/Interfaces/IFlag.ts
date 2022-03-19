@@ -1,9 +1,15 @@
-import { Argument } from '../Classes';
+import { IArgument } from './IArgument';
+
+import {
+  ICloneable,
+  IStringable,
+  IComparable,
+} from './Types';
 
 /**
  * A command flag.
  */
-export interface IFlag {
+export interface IFlag extends ICloneable, IStringable, IComparable {
   /**
    * The flag name.
    */
@@ -22,5 +28,5 @@ export interface IFlag {
   /**
    * The flag argument. 
    */
-  arg: Argument | null;
+  arg: IArgument | null;
 }

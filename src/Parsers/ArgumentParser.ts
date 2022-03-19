@@ -1,5 +1,5 @@
-import { Argument, Command } from '../Classes';
-import { IArgumentParserOptions } from '../Interfaces';
+import { Argument } from '../Classes';
+import { ICommand, IArgumentParserOptions } from '../Interfaces';
 import { splitByDoubleQuotes } from '../Utils';
 
 /**
@@ -19,7 +19,7 @@ export class ArgumentParser {
   /**
    * The command which will be used to parse arguments.
    */
-  private _command: Command | null = null;
+  private _command: ICommand | null = null;
 
   /**
    * Creates a new instance of an argument parser.

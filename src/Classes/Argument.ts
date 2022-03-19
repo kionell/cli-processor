@@ -1,9 +1,9 @@
-import { IArgument, ICloneable, IComparable, IStringable } from '../Interfaces';
+import { IArgument } from '../Interfaces';
 
 /**
  * An argument.
  */
-export class Argument implements IArgument, ICloneable, IComparable, IStringable {
+export class Argument implements IArgument {
   /**
    * The argument description.
    */

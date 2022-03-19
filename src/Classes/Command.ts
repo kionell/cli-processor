@@ -1,17 +1,11 @@
-import {
-  ICommand,
-  ICloneable,
-  IComparable,
-  IStringable,
-} from '../Interfaces';
-
+import { ICommand } from '../Interfaces';
 import { Argument } from './Argument';
 import { Flag } from './Flag';
 
 /**
  * A command.
  */
-export class Command implements ICommand, ICloneable, IComparable, IStringable {
+export class Command implements ICommand {
   /**
    * The command name.
    */
