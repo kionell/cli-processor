@@ -29,6 +29,11 @@ export class CommandParser {
   private _fullFlagPrefix = '--';
 
   /**
+   * The suffix of a flag.
+   */
+  private _flagSuffix = '';
+
+  /**
    * Whether to throw error or not. Throw errors by default.
    */
   private _throwError = true;
@@ -67,6 +72,7 @@ export class CommandParser {
 
     this._shortFlagPrefix = options?.shortFlagPrefix ?? this._shortFlagPrefix;
     this._fullFlagPrefix = options?.fullFlagPrefix ?? this._fullFlagPrefix;
+    this._flagSuffix = options?.flagSuffix ?? this._flagSuffix;
 
     this._commands = options?.commandList instanceof Map
       ? options.commandList
@@ -208,6 +214,7 @@ export class CommandParser {
     const options = {
       shortPrefix: this._shortFlagPrefix,
       fullPrefix: this._fullFlagPrefix,
+      suffix: this._flagSuffix,
       throwError: this._throwError,
       command,
     };

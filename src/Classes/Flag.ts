@@ -21,6 +21,24 @@ export class Flag implements IFlag {
   description = '';
 
   /**
+   * The full prefix of this flag.
+   * Flag parser options will overwrite this.
+   */
+  prefix = '--';
+
+  /**
+   * The short prefix of this flag.
+   * Flag parser options will overwrite this.
+   */
+  shortPrefix = '-';
+
+  /**
+   * The suffix of this flag.
+   * Flag parser options will overwrite this.
+   */
+  suffix = '';
+
+  /**
    * The flag argument. 
    */
   arg: Argument | null = null;

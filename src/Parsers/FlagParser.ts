@@ -19,12 +19,17 @@ export class FlagParser {
   /** 
    * The prefix of a shortened flag.
    */
-  private _shortPrefix = '-';
+  private _shortPrefix?: string;
 
   /**
    * The prefix of a full flag.
    */
-  private _fullPrefix = '--';
+  private _fullPrefix?: string;
+
+  /**
+   * The suffix of a flag.
+   */
+  private _suffix?: string;
 
   /**
    * The list of all command flags.
@@ -39,6 +44,7 @@ export class FlagParser {
     this._throwError = options?.throwError ?? this._throwError;
     this._shortPrefix = options?.shortPrefix ?? this._shortPrefix;
     this._fullPrefix = options?.fullPrefix ?? this._fullPrefix;
+    this._suffix = options?.suffix ?? this._suffix;
     this._command = options?.command ?? this._command;
     this._flags = this._command?.flags ?? new Map<string, IFlag>();
   }
@@ -117,9 +123,12 @@ export class FlagParser {
     flags ??= this.parse(input);
 
     flags.forEach((flag) => {
-      const shortFlag = this._shortPrefix + flag.shortName;
-      const fullFlag = this._fullPrefix + flag.name;
-      const args = flag.arg?.values.join(' ');
+      const shortPrefix = this._shortPrefix ?? flag.shortPrefix;
+      const shortFlag = shortPrefix + flag.shortName;
+
+      const fullPrefix = this._fullPrefix ?? flag.prefix;
+      const fullFlag = fullPrefix + flag.name;
+      const args = flag.arg?.value;
 
       const regex = new RegExp(`(${shortFlag}|${fullFlag})( ${args}){0,1}`);
 
@@ -147,36 +156,69 @@ export class FlagParser {
    * @return The found command or null.
    */
   private _getFlagByNameOrAlias(input: string): IFlag | null {
-    const hasShortPrefix = this._hasShortPrefix(input);
-    const hasFullPrefix = this._hasFullPrefix(input);
-
-    input = this._removePrefix(input);
-
     for (const flag of this._flags.values()) {
-      if (flag.name === input && hasFullPrefix) return flag;
-      if (flag.shortName === input && hasShortPrefix) return flag;
+      const suffix = this._suffix ?? flag.suffix;
+      const nameWithPrefix = this._removeSuffix(input, suffix);
+
+      const fullPrefix = this._fullPrefix ?? flag.prefix;
+      const fullName = this._removePrefix(nameWithPrefix, fullPrefix);
+
+      if (flag.name === fullName) return flag;
+
+      const shortPrefix = this._shortPrefix ?? flag.shortPrefix;
+      const shortName = this._removePrefix(nameWithPrefix, shortPrefix);
+
+      if (flag.shortName === shortName) return flag;
     }
 
     return null;
   }
 
-  private _removePrefix(input: string): string {
-    if (this._hasShortPrefix(input)) {
-      return input.substring(this._shortPrefix.length);
-    }
-
-    if (this._hasFullPrefix(input)) {
-      return input.substring(this._fullPrefix.length);
+  /**
+   * Removes a prefix from a flag and returns a new string.
+   * @param input String with a flag and prefix.
+   * @param prefix Prefix to remove.
+   * @returns String without flag prefix.
+   */
+  private _removePrefix(input: string, prefix: string): string {
+    if (this._hasPrefix(input, prefix)) {
+      return input.substring(prefix.length);
     }
 
     return input;
   }
 
-  private _hasShortPrefix(input: string): boolean {
-    return new RegExp(`^${this._shortPrefix}[^${this._shortPrefix}]`).test(input);
+  /**
+   * Removes a suffix from a flag and returns a new string.
+   * @param input String with a flag and suffix.
+   * @param suffix Prefix to remove.
+   * @returns String without flag suffix.
+   */
+  private _removeSuffix(input: string, suffix: string): string {
+    if (this._hasSuffix(input, suffix)) {
+      return input.substring(0, input.length - suffix.length);
+    }
+
+    return input;
   }
 
-  private _hasFullPrefix(input: string): boolean {
-    return new RegExp(`^${this._fullPrefix}[^${this._fullPrefix}]`).test(input);
+  /**
+   * Checks if string has a prefix.
+   * @param input String with a flag and prefix.
+   * @param prefix Prefix to check.
+   * @returns Whether string has prefix or not.
+   */
+  private _hasPrefix(input: string, prefix: string): boolean {
+    return new RegExp(`^${prefix}[^${prefix}]`).test(input);
+  }
+
+  /**
+   * Checks if string has a suffix.
+   * @param input String with a flag and suffix.
+   * @param suffix Suffix to check.
+   * @returns Whether string has suffix or not.
+   */
+  private _hasSuffix(input: string, suffix: string): boolean {
+    return new RegExp(`[^${suffix}]${suffix}$`).test(input);
   }
 }

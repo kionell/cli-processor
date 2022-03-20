@@ -20,6 +20,11 @@ export interface ICommandParserOptions {
   fullFlagPrefix?: string;
 
   /**
+   * A suffix of a flag that will be considered by this parser.
+   */
+  flagSuffix?: string;
+
+  /**
    * A dictionary with all existing commands.
    */
   commandList?: Map<string, ICommand> | null;

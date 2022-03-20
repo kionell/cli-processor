@@ -20,6 +20,11 @@ export interface IFlagParserOptions {
   fullPrefix?: string,
 
   /**
+   * The suffix of a flag.
+   */
+  suffix?: string;
+
+  /**
    * The command which will be used to parse arguments.
    */
   command?: ICommand | null,

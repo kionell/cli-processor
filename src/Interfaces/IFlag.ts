@@ -26,6 +26,22 @@ export interface IFlag extends ICloneable, IStringable, IComparable {
   description: string;
 
   /**
+   * The full prefix of this flag that will overwrite parser options.
+   */
+  prefix: string;
+
+  /**
+   * The short prefix of this flag that will overwrite parser options.
+   */
+  shortPrefix: string;
+
+  /**
+   * The suffix of this flag.
+   * Flag parser options will overwrite this.
+   */
+  suffix: string;
+
+  /**
    * The flag argument. 
    */
   arg: IArgument | null;
