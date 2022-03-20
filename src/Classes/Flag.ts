@@ -56,7 +56,9 @@ export class Flag implements IFlag {
    * A string representation of the flag.
    */
   toString(): string {
-    return [this.name, this.arg].filter((x) => x).join(' ');
+    const base = `${this.prefix}${this.name}${this.suffix}`;
+
+    return this.arg ? `${base} ${this.arg}` : base;
   }
 
   clone(): Flag {
