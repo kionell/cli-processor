@@ -40,9 +40,4 @@ export interface IFlag extends ICloneable, IStringable, IComparable {
    * Flag parser options will overwrite this.
    */
   suffix: string;
-
-  /**
-   * The flag argument. 
-   */
-  arg: IArgument | null;
 }

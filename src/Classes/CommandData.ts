@@ -1,5 +1,12 @@
-import { IArgument, IFlag } from '../Interfaces';
 import { CommandTree } from './CommandTree';
+
+import {
+  ICommand,
+  IArgument,
+  IHasArgument,
+  IFlag,
+  IHasFlags,
+} from '../Interfaces';
 
 export class CommandData {
   /**
@@ -33,14 +40,14 @@ export class CommandData {
    * The command arg.
    */
   get arg(): IArgument | null {
-    return this.tree.last?.arg ?? null;
+    return (this.tree.last as ICommand & IHasArgument)?.arg ?? null;
   }
 
   /**
    * The command flags.
    */
-  get flags(): Map<string, IFlag> {
-    return this.tree.last?.flags ?? new Map<string, IFlag>();
+  get flags(): Map<string, IFlag> | null {
+    return (this.tree.last as ICommand & IHasFlags)?.flags ?? null;
   }
 
   /**
@@ -80,8 +87,12 @@ export class CommandData {
 
     if (this.arg) keys.push(this.arg.toString());
 
-    this.flags.forEach((flag) => {
-      keys.push(this.flagPrefix + flag.toString());
+    this.flags?.forEach((flag) => {
+      const prefix = this.flagPrefix || flag.prefix;
+      const prefixWithName = prefix + flag.name;
+      const argument = (flag as IFlag & IHasArgument).arg;
+
+      keys.push(argument ? `${prefixWithName} ${argument}` : prefixWithName);
     });
 
     return keys.join(' ');

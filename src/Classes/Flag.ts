@@ -1,5 +1,7 @@
-import { IFlag } from '../Interfaces';
-import { Argument } from './Argument';
+import {
+  IFlag,
+  IHasArgument,
+} from '../Interfaces';
 
 /**
  * A command flag.
@@ -37,11 +39,6 @@ export class Flag implements IFlag {
    * Flag parser options will overwrite this.
    */
   suffix = '';
-
-  /**
-   * The flag argument. 
-   */
-  arg: Argument | null = null;
 
   /**
    * Creates a new instance of a flag.

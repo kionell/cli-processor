@@ -1,6 +1,9 @@
-import { ICommand } from '../Interfaces';
-import { Argument } from './Argument';
-import { Flag } from './Flag';
+import {
+  ICommand,
+  IHasArgument,
+  IHasFlags,
+  IHasSubcommands,
+} from '../Interfaces';
 
 /**
  * A command.
@@ -27,21 +30,6 @@ export class Command implements ICommand {
   description = '';
 
   /**
-   * The command argument.
-   */
-  arg: Argument | null = null;
-
-  /**
-   * The command flags.
-   */
-  flags?: Map<string, Flag>;
-
-  /**
-   * The dictionary with subcommands.
-   */
-  subcommands?: Map<string, Command>;
-
-  /**
    * The command execute function.
    */
   execute(...args: any[]): any {
@@ -64,52 +52,45 @@ export class Command implements ICommand {
     return this.name;
   }
 
-  clone(): Command {
+  clone(): this {
     const TypedCommand = this.constructor as new (params: Partial<ICommand>) => this;
 
-    const command = new TypedCommand({
+    const result = new TypedCommand({
       name: this.name,
       title: this.title,
       aliases: this.aliases.slice(),
       description: this.description,
-      arg: this.arg?.clone() ?? null,
       execute: this.execute,
     });
 
-    if (this.flags) {
-      command.flags = new Map();
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const original = this as this & IHasFlags & IHasArgument & IHasSubcommands;
+    const cloned = result as this & IHasFlags & IHasArgument & IHasSubcommands;
 
-      this.flags?.forEach((entry) => {
-        command.flags?.set(entry.name, entry.clone());
-      });
-    }
+    if (original.flags) {
+      cloned.flags = new Map();
 
-    if (this.subcommands) {
-      command.subcommands = new Map();
-
-      this.subcommands?.forEach((entry) => {
-        command.subcommands?.set(entry.name, entry.clone());
-      });
-    }
-
-    return command;
-  }
-
-  equals(other: Command): boolean {
-    if (this.name !== other.name) return false;
-
-    if (this.arg !== null && other.arg !== null) {
-      if (!this.arg.equals(other.arg)) return false;
-    }
-
-    if (this.arg !== other.arg) return false;
-
-    if (this.flags && other.flags) {
-      for (const flag of this.flags.keys()) {
-        if (!other.flags.has(flag)) return false;
+      for (const flag of original.flags.values()) {
+        cloned.flags.set(flag.name, flag.clone());
       }
     }
 
-    return true;
+    if (original.subcommands) {
+      cloned.subcommands = new Map();
+
+      for (const subcommand of original.subcommands.values()) {
+        cloned.subcommands.set(subcommand.name, subcommand.clone());
+      }
+    }
+
+    if (original.arg) {
+      cloned.arg = original.arg?.clone();
+    }
+
+    return result;
+  }
+
+  equals(other: Command): boolean {
+    return this.name === other.name;
   }
 }
