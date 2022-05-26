@@ -23,7 +23,7 @@ export class FlagParser {
   private _throwError = true;
 
   /**
-   * The command which will be used to parse arguments.
+   * The command which will be used to parse flags.
    */
   private _command: ICommand | null = null;
 
