@@ -1,4 +1,5 @@
 import { ICommand } from './ICommand';
+import { IHasFlags } from './Types';
 
 /**
  * The options of an argument parser instance.
@@ -25,7 +26,7 @@ export interface IFlagParserOptions {
   suffix?: string;
 
   /**
-   * The command which will be used to parse arguments.
+   * The command which will be used to parse flags.
    */
-  command?: ICommand | null,
+  command: ICommand & IHasFlags,
 }
