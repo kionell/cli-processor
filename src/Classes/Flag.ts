@@ -63,7 +63,6 @@ export class Flag implements IFlag {
       name: this.name,
       shortName: this.shortName,
       description: this.description,
-      arg: this.arg?.clone() ?? null,
     });
   }
 
