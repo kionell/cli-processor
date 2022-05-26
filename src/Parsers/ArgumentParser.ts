@@ -53,35 +53,31 @@ export class ArgumentParser {
    * @param input Command line.
    * @returns Parsed command args of the current command level or null.
    */
-  parse(input: string): Argument | null {
+  parse(input: string): IArgument {
     const args = splitByDoubleQuotes(input);
+    const cloned = this._arg.clone();
 
-    if (!this._validateArgs(args)) return null;
-
-    const argument = (this._command?.arg as Argument).clone();
-    const values = args.splice(0, argument.maxLength);
-
-    if (values.length > 0) {
-      argument.values = values;
+    if (this._validateArgs(args)) {
+      cloned?.setValue(input);
     }
 
-    return argument;
+    return cloned;
   }
 
   /**
-   * Checks if remained args in the list are valid.
-   * @returns Whether args valid or not.
+   * Checks if remained arguments in the list are valid.
+   * @returns Whether arguments valid or not.
    */
-  private _validateArgs(args: string[]): boolean {
-    if (!this._command?.arg) return false;
+  private _validateArgs(values: string[]): boolean {
+    if (!this._arg) return false;
 
-    const minLength = this._command.arg.minLength ?? 0;
-    const maxLength = this._command.arg.maxLength ?? 0;
+    const minLength = this._arg.minLength ?? 0;
+    const maxLength = this._arg.maxLength ?? 0;
 
     /**
      * Throw an error if there are not enough arguments.
      */
-    if (args.length < minLength) {
+    if (values.length < minLength) {
       if (this._throwError) {
         throw new Error('Not enough arguments was specified!');
       }
@@ -92,7 +88,7 @@ export class ArgumentParser {
     /**
      * Throw an error if there are too many arguments.
      */
-    if (!this._allowTooManyArgs && args.length > maxLength) {
+    if (!this._allowTooManyArgs && values.length > maxLength) {
       if (this._throwError) {
         throw new Error('Too many arguments!');
       }
