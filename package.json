@@ -2,9 +2,11 @@
   "name": "cli-processor",
   "version": "0.4.1",
   "description": "A basic command line parser for any CLI",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/esm/index.d.ts",
+  "exports": {
+    "import": "./lib/index.mjs",
+    "require": "./lib/index.cjs"
+  },
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "rollup -c && npm run format",
     "test": "jest --verbose",

@@ -1,53 +1,56 @@
 import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
+import externals from 'rollup-plugin-node-externals';
 import dts from 'rollup-plugin-dts';
 
 export default [
   {
     plugins: [
-      typescript({
-        "removeComments": false,
-        "declaration": true,
-      }),
-    ],
-    input: './src/index.ts',
-    output: [
-      {
-        file: './lib/esm/index.js',
-        format: 'es',
-      },
-    ],
-  },
-  {
-    plugins: [dts()],
-    input: './src/index.ts',
-    output: {
-      file: './lib/esm/index.d.ts',
-      format: 'es',
-    },
-  },
-  {
-    plugins: [
-      typescript({
-        "removeComments": false,
-        "declaration": true,
+      typescript(),
+      externals({
+        deps: true,
       }),
       commonjs(),
     ],
     input: './src/index.ts',
     output: [
       {
-        file: './lib/cjs/index.js',
+        file: './lib/index.cjs',
         format: 'cjs',
       },
     ],
   },
   {
-    plugins: [dts()],
+    plugins: [
+      typescript(),
+      externals({
+        deps: true,
+      }),
+    ],
+    input: './src/index.ts',
+    output: [
+      {
+        file: './lib/index.mjs',
+        format: 'es',
+      },
+    ],
+  },
+  {
+    plugins: [
+      typescript(),
+      dts({
+        compilerOptions: {
+          removeComments: false,
+        },
+      }),
+      externals({
+        deps: true,
+      }),
+    ],
     input: './src/index.ts',
     output: {
-      file: './lib/cjs/index.d.ts',
-      format: 'cjs',
+      file: './lib/index.d.ts',
+      format: 'es',
     },
   },
 ]
