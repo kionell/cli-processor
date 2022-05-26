@@ -53,13 +53,13 @@ export class Flag implements IFlag {
    * A string representation of the flag.
    */
   toString(): string {
-    const base = `${this.prefix}${this.name}${this.suffix}`;
-
-    return this.arg ? `${base} ${this.arg}` : base;
+    return this.prefix + this.name + this.suffix;
   }
 
-  clone(): Flag {
-    return new Flag({
+  clone(): this {
+    const TypedFlag = this.constructor as new (params: Partial<IFlag>) => this;
+
+    const result = new TypedFlag({
       name: this.name,
       shortName: this.shortName,
       description: this.description,
