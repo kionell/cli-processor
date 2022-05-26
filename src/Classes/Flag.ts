@@ -64,18 +64,19 @@ export class Flag implements IFlag {
       shortName: this.shortName,
       description: this.description,
     });
-  }
 
-  equals(other: Flag): boolean {
-    if (this.name !== other.name) return false;
-    if (this.shortName !== other.shortName) return false;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const original = this as this & IHasArgument;
+    const cloned = result as this & IHasArgument;
 
-    if (this.arg !== null && other.arg !== null) {
-      if (!this.arg.equals(other.arg)) return false;
+    if (original.arg) {
+      cloned.arg = original.arg.clone();
     }
 
-    if (this.arg !== other.arg) return false;
+    return result;
+  }
 
-    return true;
+  equals(other: IFlag): boolean {
+    return this.name === other.name && this.shortName === other.shortName;
   }
 }
