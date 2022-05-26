@@ -5,5 +5,5 @@ export interface ICloneable {
   /**
    * Creates a deep copy of the ICloneable object.
    */
-  clone(): ICloneable;
+  clone(): this;
 }
