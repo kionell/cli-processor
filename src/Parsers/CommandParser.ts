@@ -192,7 +192,9 @@ export class CommandParser {
     /**
      * Check for the subcommands.
      */
-    this._buildCommandTree(args, tree, command.subcommands);
+    const commandWithSubcommands = command as ICommand & IHasSubcommands;
+
+    this._buildCommandTree(args, tree, commandWithSubcommands.subcommands);
   }
 
   /**
@@ -228,7 +230,7 @@ export class CommandParser {
    * @param command Current command object.
    * @return The flag parser of the current command.
    */
-  private _getFlagParser(command: ICommand): FlagParser {
+  private _getFlagParser(command: ICommand & IHasFlags): FlagParser {
     const options = {
       shortPrefix: this._shortFlagPrefix,
       fullPrefix: this._fullFlagPrefix,
@@ -245,7 +247,7 @@ export class CommandParser {
    * @param command Current command object.
    * @return The argument parser of the current command.
    */
-  private _getArgParser(command: ICommand): ArgumentParser {
+  private _getArgParser(command: ICommand & IHasArgument): ArgumentParser {
     const options = {
       throwError: this._throwError,
       allowTooManyArgs: this._allowTooManyArgs,
@@ -266,13 +268,13 @@ export class CommandParser {
 
     for (const command of commands.values()) {
       if (command.name === input || command.aliases.includes(input)) {
-        const cloned = command.clone() as Command;
+        const cloned = command.clone() as ICommand & IHasArgument;
 
         /**
-         * Reset current command argument.
+         * Reset current command argument if it exists.
          */
         if (cloned.arg) {
-          cloned.arg.length = 0;
+          cloned.arg.setValue(null);
         }
 
         return cloned;
