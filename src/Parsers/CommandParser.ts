@@ -137,14 +137,26 @@ export class CommandParser {
        */
       const last = data.tree.last as ICommand;
 
-      const flagParser = this._getFlagParser(last);
-      const argParser = this._getArgParser(last);
-
       const target = args.join(' ');
-      const targetWithNoFlags = flagParser.getCommandLineWithoutFlags(target);
+      let targetWithNoFlags = target;
 
-      last.flags = flagParser.parse(target);
-      last.arg = argParser.parse(targetWithNoFlags);
+      const commandWithFlags = last as ICommand & IHasFlags;
+
+      if (commandWithFlags.flags) {
+        const flagParser = this._getFlagParser(commandWithFlags);
+
+        targetWithNoFlags = flagParser.getCommandLineWithoutFlags(target);
+
+        commandWithFlags.flags = flagParser.parse(target);
+      }
+
+      const commandWithArg = last as ICommand & IHasArgument;
+
+      if (commandWithArg.arg) {
+        const argParser = this._getArgParser(commandWithArg);
+
+        commandWithArg.arg = argParser.parse(targetWithNoFlags);
+      }
     }
 
     data.prefix = this._prefix;
