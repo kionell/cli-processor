@@ -148,14 +148,23 @@ export class FlagParser {
     flags ??= this.parse(input);
 
     flags.forEach((flag) => {
-      const shortPrefix = this._shortPrefix ?? flag.shortPrefix;
-      const shortFlag = shortPrefix + flag.shortName;
+      const flagWithArg = flag as IFlag & IHasArgument;
 
-      const fullPrefix = this._fullPrefix ?? flag.prefix;
-      const fullFlag = fullPrefix + flag.name;
-      const args = flag.arg?.value;
+      const shortPrefix = this._shortPrefix ?? flagWithArg.shortPrefix;
+      const shortFlag = escapeRegExp(shortPrefix + flagWithArg.shortName);
 
-      const regex = new RegExp(`(${shortFlag}|${fullFlag})( ${args}){0,1}`);
+      const fullPrefix = this._fullPrefix ?? flagWithArg.prefix;
+      const fullFlag = escapeRegExp(fullPrefix + flagWithArg.name);
+
+      const flagValue = flagWithArg.arg?.getValueOrDefault();
+
+      let stringified = `(${shortFlag}|${fullFlag})`;
+
+      if (typeof flagValue !== 'undefined') {
+        stringified += escapeRegExp(` ${flagValue}`);
+      }
+
+      const regex = new RegExp(stringified);
 
       input = input.replace(regex, '');
     });
