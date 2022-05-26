@@ -1,16 +1,9 @@
-import { IArgument } from './IArgument';
-import { IFlag } from './IFlag';
-
-import {
-  ICloneable,
-  IStringable,
-  IComparable,
-} from './Types';
+import { ICloneable, IComparable } from './Types';
 
 /**
  * A command.
  */
-export interface ICommand extends ICloneable, IStringable, IComparable {
+export interface ICommand extends ICloneable, IComparable {
   /**
    * The command name.
    */
@@ -30,21 +23,6 @@ export interface ICommand extends ICloneable, IStringable, IComparable {
    * The command description.
    */
   description: string;
-
-  /**
-   * The command argument.
-   */
-  arg: IArgument | null;
-
-  /**
-   * The command flags.
-   */
-  flags?: Map<string, IFlag>;
-
-  /**
-   * The dictionary with subcommands.
-   */
-  subcommands?: Map<string, ICommand>;
 
   /**
    * The command execute function.
