@@ -24,17 +24,28 @@ export class ArgumentParser {
   /**
    * The command which will be used to parse arguments.
    */
-  private _command: ICommand | null = null;
+  private _command: ICommand & IHasArgument;
+
+  /**
+   * The argument instance that will be used to parse argument.
+   */
+  private _arg: IArgument;
 
   /**
    * Creates a new instance of an argument parser.
    * @param options The argument parser options.
    * @constructor
    */
-  constructor(options?: IArgumentParserOptions) {
+  constructor(options: IArgumentParserOptions) {
     this._throwError = options?.throwError ?? this._throwError;
     this._allowTooManyArgs = options?.allowTooManyArgs ?? this._allowTooManyArgs;
-    this._command = options?.command ?? this._command;
+    this._command = options.command;
+
+    if (!this._command?.arg && this._throwError) {
+      throw new Error('Argument instance is not found!');
+    }
+
+    this._arg = this._command?.arg ?? {};
   }
 
   /**
