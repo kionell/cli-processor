@@ -1,6 +1,17 @@
-import { Flag } from '../Classes';
-import { IFlag, ICommand, IFlagParserOptions } from '../Interfaces';
-import { removeDoubleQuotes, splitByDoubleQuotes } from '../Utils';
+import {
+  IFlag,
+  ICommand,
+  IFlagParserOptions,
+  IHasFlags,
+  IArgument,
+  IHasArgument,
+} from '../Interfaces';
+
+import {
+  escapeRegExp,
+  removeDoubleQuotes,
+  splitByDoubleQuotes,
+} from '../Utils';
 
 /**
  * A flag parser.

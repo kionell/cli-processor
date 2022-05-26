@@ -1,6 +1,11 @@
-import { Argument } from '../Classes';
-import { ICommand, IArgumentParserOptions } from '../Interfaces';
 import { splitByDoubleQuotes } from '../Utils';
+
+import {
+  IArgumentParserOptions,
+  IArgument,
+  ICommand,
+  IHasArgument,
+} from '../Interfaces';
 
 /**
  * An argument parser.

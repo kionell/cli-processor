@@ -1,13 +1,19 @@
+import { FlagParser } from './FlagParser';
+import { ArgumentParser } from './ArgumentParser';
+import { splitByDoubleQuotes } from '../Utils';
+
 import {
-  Command,
   CommandData,
   CommandTree,
 } from '../Classes';
 
-import { FlagParser } from './FlagParser';
-import { ArgumentParser } from './ArgumentParser';
-import { ICommand, ICommandParserOptions } from '../Interfaces';
-import { splitByDoubleQuotes } from '../Utils';
+import {
+  ICommand,
+  ICommandParserOptions,
+  IHasArgument,
+  IHasFlags,
+  IHasSubcommands,
+} from '../Interfaces';
 
 /**
  * A command parser.
