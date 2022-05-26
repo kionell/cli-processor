@@ -25,7 +25,7 @@ export class FlagParser {
   /**
    * The command which will be used to parse flags.
    */
-  private _command: ICommand | null = null;
+  private _command: ICommand & IHasFlags;
 
   /** 
    * The prefix of a shortened flag.
@@ -48,15 +48,27 @@ export class FlagParser {
   private _flags: Map<string, IFlag>;
 
   /**
+   * The argument instance of this command.
+   */
+  private _arg: IArgument | null;
+
+  /**
    * Creates a new instance of a flag parser.
    * @param options The flag parser options.
    */
-  constructor(options?: IFlagParserOptions) {
+  constructor(options: IFlagParserOptions) {
     this._throwError = options?.throwError ?? this._throwError;
     this._shortPrefix = options?.shortPrefix ?? this._shortPrefix;
     this._fullPrefix = options?.fullPrefix ?? this._fullPrefix;
     this._suffix = options?.suffix ?? this._suffix;
-    this._command = options?.command ?? this._command;
+    this._command = options.command;
+
+    this._arg = (this._command as unknown as IHasArgument).arg ?? null;
+
+    if (!this._command?.flags && this._throwError) {
+      throw new Error('Flags list is not found!');
+    }
+
     this._flags = this._command?.flags ?? new Map<string, IFlag>();
   }
 
@@ -70,19 +82,19 @@ export class FlagParser {
 
     const parsed: Map<string, IFlag> = new Map();
     const positions = this._findFlagPositions(args);
-    const cmdMinLength = this._command?.arg?.isRequired
-      ? this._command?.arg?.minLength ?? 0 : 0;
+    const cmdMinLength = this._arg?.isRequired ? this._arg?.minLength ?? 0 : 0;
 
     positions.forEach((currentFlag, currentPos) => {
-      const clonedFlag = currentFlag.clone() as Flag;
+      const flagWithArg = currentFlag.clone() as IFlag & IHasArgument;
+      const values = [];
 
       /**
        * Possible args are starting from the current flag position.
        * We need to subtract 1 to skip the flag itself.
        */
       const possibleArgs = args.length - currentPos - 1;
-      const flagMinLength = clonedFlag.arg?.minLength ?? 0;
-      const flagMaxLength = clonedFlag.arg?.maxLength ?? 0;
+      const flagMinLength = flagWithArg?.arg.minLength ?? 0;
+      const flagMaxLength = flagWithArg?.arg.maxLength ?? 0;
 
       /**
        * Collecting the flag arguments. We go through all arguments 
@@ -102,7 +114,7 @@ export class FlagParser {
 
         if (isEndOfFlag || isCollected || isOnMinimum) break;
 
-        clonedFlag.arg?.values.push(args[currentPos]);
+        values.push(args[currentPos]);
       }
 
       /**
@@ -116,7 +128,9 @@ export class FlagParser {
         return;
       }
 
-      parsed.set(clonedFlag.name, clonedFlag);
+      flagWithArg?.arg.setValue(values.join(' '));
+
+      parsed.set(flagWithArg.name, flagWithArg);
     });
 
     return parsed;
