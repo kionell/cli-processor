@@ -144,10 +144,11 @@ export class CommandParser {
 
       if (commandWithFlags.flags) {
         const flagParser = this._getFlagParser(commandWithFlags);
+        const flags = flagParser.parse(target);
 
-        targetWithNoFlags = flagParser.getCommandLineWithoutFlags(target);
+        targetWithNoFlags = flagParser.getCommandLineWithoutFlags(target, flags);
 
-        commandWithFlags.flags = flagParser.parse(target);
+        commandWithFlags.flags = flags;
       }
 
       const commandWithArg = last as ICommand & IHasArgument;
