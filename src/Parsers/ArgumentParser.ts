@@ -77,7 +77,7 @@ export class ArgumentParser {
     /**
      * Throw an error if there are not enough arguments.
      */
-    if (values.length < minLength) {
+    if (values.length < minLength && this._arg.isRequired) {
       if (this._throwError) {
         throw new Error('Not enough arguments was specified!');
       }
