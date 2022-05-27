@@ -200,8 +200,6 @@ export class FlagParser {
 
       // Exact match by full version of a flag.
       if (input === fullPrefix + flag.name + suffix) return flag;
-
-      return flag;
     }
 
     return null;
