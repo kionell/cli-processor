@@ -191,49 +191,20 @@ export class FlagParser {
    */
   private _getFlagByNameOrAlias(input: string): IFlag | null {
     for (const flag of this._flags.values()) {
-      const suffix = this._suffix ?? flag.suffix;
-      const nameWithPrefix = this._removeSuffix(input, suffix);
+      const shortPrefix = flag.shortPrefix ?? this._shortPrefix;
+      const fullPrefix = flag.prefix ?? this._fullPrefix;
+      const suffix = flag.suffix ?? this._suffix;
 
-      const fullPrefix = this._fullPrefix ?? flag.prefix;
-      const fullName = this._removePrefix(nameWithPrefix, fullPrefix);
+      const hasShortPrefix = this._hasPrefix(input, shortPrefix);
+      const hasFullPrefix = this._hasPrefix(input, fullPrefix);
+      const hasSuffix = this._hasSuffix(input, suffix);
 
-      if (flag.name === fullName) return flag;
+      if (!hasShortPrefix && !hasFullPrefix || !hasSuffix) continue;
 
-      const shortPrefix = this._shortPrefix ?? flag.shortPrefix;
-      const shortName = this._removePrefix(nameWithPrefix, shortPrefix);
-
-      if (flag.shortName === shortName) return flag;
+      return flag;
     }
 
     return null;
-  }
-
-  /**
-   * Removes a prefix from a flag and returns a new string.
-   * @param input String with a flag and prefix.
-   * @param prefix Prefix to remove.
-   * @returns String without flag prefix.
-   */
-  private _removePrefix(input: string, prefix: string): string {
-    if (this._hasPrefix(input, prefix)) {
-      return input.substring(prefix.length);
-    }
-
-    return input;
-  }
-
-  /**
-   * Removes a suffix from a flag and returns a new string.
-   * @param input String with a flag and suffix.
-   * @param suffix Prefix to remove.
-   * @returns String without flag suffix.
-   */
-  private _removeSuffix(input: string, suffix: string): string {
-    if (this._hasSuffix(input, suffix)) {
-      return input.substring(0, input.length - suffix.length);
-    }
-
-    return input;
   }
 
   /**
@@ -243,6 +214,8 @@ export class FlagParser {
    * @returns Whether string has prefix or not.
    */
   private _hasPrefix(input: string, prefix: string): boolean {
+    if (!prefix) return true;
+
     return new RegExp(`^${prefix}[^${prefix}]`).test(input);
   }
 
@@ -253,6 +226,8 @@ export class FlagParser {
    * @returns Whether string has suffix or not.
    */
   private _hasSuffix(input: string, suffix: string): boolean {
+    if (!suffix) return true;
+
     return new RegExp(`[^${suffix}]${suffix}$`).test(input);
   }
 }
