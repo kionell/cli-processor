@@ -176,7 +176,7 @@ export class FlagParser {
     const positions: Map<number, IFlag> = new Map<number, IFlag>();
 
     args.forEach((arg, index) => {
-      const flag = this._getFlagByNameOrAlias(arg);
+      const flag = this._getFlagByNameOrShortname(arg);
 
       if (flag) positions.set(index, flag);
     });
@@ -189,45 +189,21 @@ export class FlagParser {
    * @param input Command name or alias.
    * @return The found command or null.
    */
-  private _getFlagByNameOrAlias(input: string): IFlag | null {
+  private _getFlagByNameOrShortname(input: string): IFlag | null {
     for (const flag of this._flags.values()) {
-      const shortPrefix = flag.shortPrefix ?? this._shortPrefix;
-      const fullPrefix = flag.prefix ?? this._fullPrefix;
-      const suffix = flag.suffix ?? this._suffix;
+      const shortPrefix = flag.shortPrefix ?? this._shortPrefix ?? '';
+      const fullPrefix = flag.prefix ?? this._fullPrefix ?? '';
+      const suffix = flag.suffix ?? this._suffix ?? '';
 
-      const hasShortPrefix = this._hasPrefix(input, shortPrefix);
-      const hasFullPrefix = this._hasPrefix(input, fullPrefix);
-      const hasSuffix = this._hasSuffix(input, suffix);
+      // Exact match by short version of a flag.
+      if (input === shortPrefix + flag.shortName + suffix) return flag;
 
-      if (!hasShortPrefix && !hasFullPrefix || !hasSuffix) continue;
+      // Exact match by full version of a flag.
+      if (input === fullPrefix + flag.name + suffix) return flag;
 
       return flag;
     }
 
     return null;
-  }
-
-  /**
-   * Checks if string has a prefix.
-   * @param input String with a flag and prefix.
-   * @param prefix Prefix to check.
-   * @returns Whether string has prefix or not.
-   */
-  private _hasPrefix(input: string, prefix: string): boolean {
-    if (!prefix) return true;
-
-    return new RegExp(`^${prefix}[^${prefix}]`).test(input);
-  }
-
-  /**
-   * Checks if string has a suffix.
-   * @param input String with a flag and suffix.
-   * @param suffix Suffix to check.
-   * @returns Whether string has suffix or not.
-   */
-  private _hasSuffix(input: string, suffix: string): boolean {
-    if (!suffix) return true;
-
-    return new RegExp(`[^${suffix}]${suffix}$`).test(input);
   }
 }
