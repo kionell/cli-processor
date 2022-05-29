@@ -294,7 +294,7 @@ export class CommandParser {
 
   private _hasPrefix(input: string): boolean {
     const expression = `^${this._prefix}[^${this._prefix}]`;
-    const flags = this._caseSensitive ? 'g' : '';
+    const flags = this._caseSensitive ? '' : 'i';
 
     return new RegExp(expression, flags).test(input);
   }
