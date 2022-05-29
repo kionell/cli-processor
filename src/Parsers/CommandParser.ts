@@ -107,6 +107,11 @@ export class CommandParser {
     }
 
     /**
+     * Remove prefix before parsing this command line.
+     */
+    input = this._removePrefix(input);
+
+    /**
      * We need to preprocess double quotes before parsing. 
      */
     const args = splitByDoubleQuotes(input);
@@ -265,8 +270,6 @@ export class CommandParser {
    * @return The found command or null.
    */
   private _getCommandByNameOrAlias(input: string, commands: Map<string, ICommand>): ICommand | null {
-    input = this._removePrefix(input);
-
     for (const command of commands.values()) {
       if (command.name === input || command.aliases.includes(input)) {
         const cloned = command.clone() as ICommand & IHasArgument;
