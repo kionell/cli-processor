@@ -178,7 +178,7 @@ export class CommandParser {
    * @param parent The list of commands at higher level.
    */
   private _buildCommandTree(args: string[], tree: CommandTree, parent?: Map<string, ICommand>): void {
-    if (!parent) return;
+    if (!parent?.size) return;
 
     /**
      * Check if the first argument is a command.
