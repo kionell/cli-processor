@@ -142,7 +142,15 @@ export class CommandParser {
        */
       const last = data.tree.last as ICommand;
 
-      const target = args.join(' ');
+      /**
+       * Wrap args with double quotes if they have spaces.
+       * This is done because nested parsers was written as independent modules.
+       * Flag & argument parsers will split string by double quotes by themselves.
+       * Args that was quoted from the beginning must contain their spaces.
+       * Additional splitting of an already split line will remove those spaces. 
+       */
+      const target = args.map((a) => a.includes(' ') ? `"${a}"` : a).join(' ');
+
       let targetWithNoFlags = target;
 
       const commandWithFlags = last as ICommand & IHasFlags;
