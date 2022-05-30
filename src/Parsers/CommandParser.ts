@@ -191,7 +191,7 @@ export class CommandParser {
     /**
      * Check if the first argument is a command.
      */
-    const first = args[0].toLowerCase() ?? '';
+    const first = args?.[0]?.toLowerCase() ?? '';
     const command = this._getCommand(first, parent);
 
     if (!command) return;
