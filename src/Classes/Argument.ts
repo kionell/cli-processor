@@ -1,5 +1,6 @@
 import { ArgumentType } from '../Types';
 import { IArgument } from '../Interfaces';
+import { removeDoubleQuotes, splitByDoubleQuotes } from '../Utils';
 
 /**
  * An argument.
@@ -109,14 +110,13 @@ export class Argument<T extends string | number | boolean = string | number | bo
 
     if (!isString && !isNumber && !isBoolean) return;
 
-    const stringified = value.toString();
-    const values = stringified.split(' ');
+    const values = splitByDoubleQuotes(value.toString());
 
     if (values.length < this.minLength) return;
     if (values.length > this.maxLength) return;
 
     this._raw = values;
-    this._value = value as T;
+    this._value = isString ? removeDoubleQuotes(value) as T : value;
   }
 
   /**
