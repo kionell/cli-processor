@@ -173,7 +173,7 @@
         "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-useless-constructor": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/no-this-alis": "off"
+        "@typescript-eslint/no-this-alias": "off"
       }
     }
   ]
