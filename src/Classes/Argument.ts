@@ -116,7 +116,7 @@ export class Argument<T extends string | number | boolean = string | number | bo
     if (values.length > this.maxLength) return;
 
     this._raw = values;
-    this._value = isString ? removeDoubleQuotes(value) as T : value;
+    this._value = isString ? removeDoubleQuotes(value as string) as T : value;
   }
 
   /**
