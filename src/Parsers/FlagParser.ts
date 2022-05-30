@@ -92,8 +92,8 @@ export class FlagParser {
        * We need to subtract 1 to skip the flag itself.
        */
       const possibleArgs = args.length - currentPos - 1;
-      const flagMinLength = flagWithArg?.arg.minLength ?? 0;
-      const flagMaxLength = flagWithArg?.arg.maxLength ?? 0;
+      const flagMinLength = flagWithArg?.arg?.minLength ?? 0;
+      const flagMaxLength = flagWithArg?.arg?.maxLength ?? 0;
 
       /**
        * Collecting the flag arguments. We go through all arguments 
@@ -127,7 +127,7 @@ export class FlagParser {
         return;
       }
 
-      flagWithArg?.arg.setValue(values.join(' '));
+      flagWithArg?.arg?.setValue(values.join(' '));
 
       parsed.set(flagWithArg.name, flagWithArg);
     });
