@@ -3,7 +3,7 @@ import { ICommand } from '../Interfaces';
 /**
  * A command tree.
  */
-export class CommandTree {
+export class CommandTree implements Iterable<ICommand> {
   /**
    * A command list by levels.
    */
@@ -30,6 +30,12 @@ export class CommandTree {
     return this._commands.length;
   }
 
+  at(index?: number): ICommand | null {
+    if (typeof index !== 'number') return null;
+
+    return this._commands[index] ?? null;
+  }
+
   /**
    * Adds a new level of a commands.
    * @param command The command to be added.
@@ -48,5 +54,14 @@ export class CommandTree {
 
   toString(): string {
     return this._commands.map((c) => c.toString()).join(' ');
+  }
+
+  [Symbol.iterator](): Iterator<ICommand> {
+    const data = this._commands;
+    let i = -1;
+
+    return {
+      next: () => ({ value: data[++i], done: !(i in data) }),
+    };
   }
 }
