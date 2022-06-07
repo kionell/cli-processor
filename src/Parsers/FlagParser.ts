@@ -8,6 +8,7 @@ import {
 } from '../Interfaces';
 
 import {
+  addDoubleQuotes,
   escapeRegExp,
   splitByDoubleQuotes,
 } from '../Utils';
@@ -127,7 +128,10 @@ export class FlagParser {
         return;
       }
 
-      flagWithArg?.arg?.setValue(values.join(' '));
+      /**
+       * We need to double quote all arguments before adding a new value.
+       */
+      flagWithArg?.arg?.setValue(values.map(addDoubleQuotes).join(' '));
 
       parsed.set(flagWithArg.name, flagWithArg);
     });

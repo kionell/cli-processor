@@ -44,6 +44,15 @@ export function splitByDoubleQuotes(input: string): string[] {
 }
 
 /**
+ * Wraps argument with double quotes if it has spaces.
+ * @param input Target argument.
+ * @returns Double quoted argument or the same value.
+ */
+export function addDoubleQuotes(input: string): string {
+  return input.split(' ').length > 1 ? `"${input}"` : input;
+}
+
+/**
  * Removes double quotes from command line except backslashed double quotes.
  * @param input Command line
  * @returns Command line without double quotes.

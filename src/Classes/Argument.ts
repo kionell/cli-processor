@@ -1,6 +1,6 @@
 import { ArgumentType } from '../Types';
 import { IArgument } from '../Interfaces';
-import { removeDoubleQuotes, splitByDoubleQuotes } from '../Utils';
+import { addDoubleQuotes, removeDoubleQuotes, splitByDoubleQuotes } from '../Utils';
 
 /**
  * An argument.
@@ -143,10 +143,6 @@ export class Argument<T extends string | number | boolean = string | number | bo
    * A string representation of the argument.
    */
   toString(): string {
-    const addDoubleQuotes = (input: string) => {
-      return input.split(' ').length > 1 ? `"${input}"` : input;
-    };
-
     return this._raw.map((v) => addDoubleQuotes(v)).join(' ');
   }
 
