@@ -153,7 +153,7 @@ export class FlagParser {
       const fullPrefix = this._fullPrefix ?? flagWithArg.prefix;
       const fullFlag = escapeRegExp(fullPrefix + flagWithArg.name);
 
-      const flagValue = flagWithArg.arg?.getValueOrDefault();
+      const flagValue = flagWithArg.arg?.toString();
 
       let stringified = `(${shortFlag}|${fullFlag})`;
 
