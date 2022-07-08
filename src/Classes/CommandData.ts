@@ -1,12 +1,5 @@
 import { CommandTree } from './CommandTree';
-
-import {
-  ICommand,
-  IArgument,
-  IHasArgument,
-  IFlag,
-  IHasFlags,
-} from '../Interfaces';
+import { IOption } from '../Interfaces';
 
 export class CommandData {
   /**
@@ -37,17 +30,10 @@ export class CommandData {
   }
 
   /**
-   * The command arg.
+   * The command options.
    */
-  get arg(): IArgument | null {
-    return (this.tree.last as ICommand & IHasArgument)?.arg ?? null;
-  }
-
-  /**
-   * The command flags.
-   */
-  get flags(): Map<string, IFlag> | null {
-    return (this.tree.last as ICommand & IHasFlags)?.flags ?? null;
+  get options(): IOption[] | null {
+    return this.tree.last?.options ?? null;
   }
 
   /**
@@ -85,14 +71,8 @@ export class CommandData {
       keys.push(this.prefix + this.tree.toString());
     }
 
-    if (this.arg) keys.push(this.arg.toString());
-
-    this.flags?.forEach((flag) => {
-      const prefix = this.flagPrefix || flag.prefix;
-      const prefixWithName = prefix + flag.name;
-      const argument = (flag as IFlag & IHasArgument).arg;
-
-      keys.push(argument ? `${prefixWithName} ${argument}` : prefixWithName);
+    this.options?.forEach((option) => {
+      keys.push(option.toString());
     });
 
     return keys.join(' ');

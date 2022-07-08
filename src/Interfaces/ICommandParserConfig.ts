@@ -1,9 +1,9 @@
 import { ICommand } from './ICommand';
 
 /**
- * The options of a command parser instance.
+ * Config for a command parser instance.
  */
-export interface ICommandParserOptions {
+export interface ICommandParserConfig {
   /**
    * A command prefix that will be considered by this parser.
    */

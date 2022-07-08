@@ -3,7 +3,8 @@
  */
 export interface IComparable {
   /**
-   * Checks if two commands are equal.
+   * Returns if two IComparable objects are equal.
+   * @param other Other IComparable object.
    */
   equals(other: IComparable): boolean;
 }

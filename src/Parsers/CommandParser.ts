@@ -1,5 +1,5 @@
-import { FlagParser } from './FlagParser';
-import { ArgumentParser } from './ArgumentParser';
+import { OptionParser } from './OptionParser';
+import { OptionType } from '../Types';
 import { splitByDoubleQuotes } from '../Utils';
 
 import {
@@ -9,10 +9,8 @@ import {
 
 import {
   ICommand,
-  ICommandParserOptions,
-  IHasArgument,
-  IHasFlags,
-  IHasSubcommands,
+  ICommandParserConfig,
+  IFlag,
 } from '../Interfaces';
 
 /**
@@ -61,27 +59,27 @@ export class CommandParser {
 
   /**
    * Creates a new instance of a command parser.
-   * @param options The dictionary with commands or command parser options.
+   * @param config The dictionary with commands or command parser options.
    * @constructor
    */
-  constructor(options?: Map<string, ICommand> | ICommandParserOptions) {
-    if (options instanceof Map) {
-      this._commands = options ?? new Map<string, ICommand>();
+  constructor(config?: Map<string, ICommand> | ICommandParserConfig) {
+    if (config instanceof Map) {
+      this._commands = config ?? new Map<string, ICommand>();
 
       return;
     }
 
-    this._prefix = options?.commandPrefix ?? this._prefix;
-    this._throwError = options?.throwError ?? this._throwError;
-    this._allowTooManyArgs = options?.allowTooManyArgs ?? this._allowTooManyArgs;
-    this._caseSensitive = options?.caseSensitive ?? this._caseSensitive;
+    this._prefix = config?.commandPrefix ?? this._prefix;
+    this._throwError = config?.throwError ?? this._throwError;
+    this._allowTooManyArgs = config?.allowTooManyArgs ?? this._allowTooManyArgs;
+    this._caseSensitive = config?.caseSensitive ?? this._caseSensitive;
 
-    this._shortFlagPrefix = options?.shortFlagPrefix ?? this._shortFlagPrefix;
-    this._fullFlagPrefix = options?.fullFlagPrefix ?? this._fullFlagPrefix;
-    this._flagSuffix = options?.flagSuffix ?? this._flagSuffix;
+    this._shortFlagPrefix = config?.shortFlagPrefix ?? this._shortFlagPrefix;
+    this._fullFlagPrefix = config?.fullFlagPrefix ?? this._fullFlagPrefix;
+    this._flagSuffix = config?.flagSuffix ?? this._flagSuffix;
 
-    this._commands = options?.commandList instanceof Map
-      ? options.commandList
+    this._commands = config?.commandList instanceof Map
+      ? config.commandList
       : new Map<string, ICommand>();
   }
 
@@ -137,10 +135,7 @@ export class CommandParser {
     this._buildCommandTree(args, data.tree, this._commands);
 
     if (data.tree.levels > 0) {
-      /**
-       * Get last level of a tree.
-       */
-      const last = data.tree.last as ICommand;
+      const command = data.tree.last as ICommand;
 
       /**
        * Wrap args with double quotes if they have spaces.
@@ -151,26 +146,7 @@ export class CommandParser {
        */
       const target = args.map((a) => a.includes(' ') ? `"${a}"` : a).join(' ');
 
-      let targetWithNoFlags = target;
-
-      const commandWithFlags = last as ICommand & IHasFlags;
-
-      if (commandWithFlags.flags) {
-        const flagParser = this._getFlagParser(commandWithFlags);
-        const flags = flagParser.parse(target);
-
-        targetWithNoFlags = flagParser.getCommandLineWithoutFlags(target, flags);
-
-        commandWithFlags.flags = flags;
-      }
-
-      const commandWithArg = last as ICommand & IHasArgument;
-
-      if (commandWithArg.arg) {
-        const argParser = this._getArgParser(commandWithArg);
-
-        commandWithArg.arg = argParser.parse(targetWithNoFlags);
-      }
+      command.options = this._getOptionParser(command).parse(target);
     }
 
     data.prefix = this._prefix;
@@ -206,9 +182,7 @@ export class CommandParser {
     /**
      * Check for the subcommands.
      */
-    const commandWithSubcommands = command as ICommand & IHasSubcommands;
-
-    this._buildCommandTree(args, tree, commandWithSubcommands.subcommands);
+    this._buildCommandTree(args, tree, command.subcommands);
   }
 
   /**
@@ -240,35 +214,19 @@ export class CommandParser {
   }
 
   /**
-   * Creates a new instance of the flag parser for the command.
+   * Creates a new instance of the option parser for the current command.
    * @param command Current command object.
-   * @return The flag parser of the current command.
+   * @return The option parser for the current command.
    */
-  private _getFlagParser(command: ICommand & IHasFlags): FlagParser {
-    const options = {
+  private _getOptionParser(command: ICommand): OptionParser {
+    return new OptionParser({
       shortPrefix: this._shortFlagPrefix,
       fullPrefix: this._fullFlagPrefix,
       suffix: this._flagSuffix,
       throwError: this._throwError,
-      command,
-    };
-
-    return new FlagParser(options);
-  }
-
-  /**
-   * Creates a new instance of the argument parser for the command.
-   * @param command Current command object.
-   * @return The argument parser of the current command.
-   */
-  private _getArgParser(command: ICommand & IHasArgument): ArgumentParser {
-    const options = {
-      throwError: this._throwError,
-      allowTooManyArgs: this._allowTooManyArgs,
-      command,
-    };
-
-    return new ArgumentParser(options);
+      flags: command.getOptionsOfType(OptionType.Flag) as IFlag[],
+      args: command.getOptionsOfType(OptionType.Argument),
+    });
   }
 
   /**
@@ -280,14 +238,12 @@ export class CommandParser {
   private _getCommandByNameOrAlias(input: string, commands: Map<string, ICommand>): ICommand | null {
     for (const command of commands.values()) {
       if (command.name === input || command.aliases.includes(input)) {
-        const cloned = command.clone() as ICommand & IHasArgument;
+        const cloned = command.clone();
 
         /**
-         * Reset current command argument if it exists.
+         * Reset current command options state.
          */
-        if (cloned.arg) {
-          cloned.arg.setValue(null);
-        }
+        cloned.options.forEach((o) => o.setValue(null));
 
         return cloned;
       }

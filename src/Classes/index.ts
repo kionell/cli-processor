@@ -3,3 +3,4 @@ export * from './Command';
 export * from './CommandData';
 export * from './CommandTree';
 export * from './Flag';
+export * from './Option';
