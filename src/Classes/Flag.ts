@@ -1,36 +1,18 @@
-import {
-  IFlag,
-  IHasArgument,
-} from '../Interfaces';
+import { Option } from './Option';
+import { IFlag } from '../Interfaces';
+import { InputData, OptionType } from '../Types';
 
 /**
  * A command flag.
  */
-export class Flag implements IFlag {
+export class Flag<T extends InputData = InputData> extends Option<T> implements IFlag<T> {
   /**
-   * The flag name.
-   */
-  name = '';
-
-  /**
-   * The flag shortened name.
-   */
-  shortName = '';
-
-  /**
-   * The flag description.
-   */
-  description = '';
-
-  /**
-   * The full prefix of this flag.
-   * Flag parser options will overwrite this.
+   * The full prefix of this flag that will overwrite parser options.
    */
   prefix = '--';
 
   /**
-   * The short prefix of this flag.
-   * Flag parser options will overwrite this.
+   * The short prefix of this flag that will overwrite parser options.
    */
   shortPrefix = '-';
 
@@ -41,42 +23,37 @@ export class Flag implements IFlag {
   suffix = '';
 
   /**
-   * Creates a new instance of a flag.
-   * @param params The flag params.
-   * @constructor
+   * The type of this option.
    */
-  constructor(params: Partial<IFlag> = {}) {
-    Object.assign(this, params);
-  }
+  type: OptionType = OptionType.Flag;
 
   /**
    * A string representation of the flag.
    */
   toString(): string {
-    return this.prefix + this.name + this.suffix;
+    return this.prefix + this.name + this.suffix + ' ' + super.toString();
   }
 
+  /**
+   * Creates a deep copy of this flag.
+   */
   clone(): this {
-    const TypedFlag = this.constructor as new (params: Partial<IFlag>) => this;
+    const result = super.clone();
 
-    const result = new TypedFlag({
-      name: this.name,
-      shortName: this.shortName,
-      description: this.description,
-    });
-
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const original = this as this & IHasArgument;
-    const cloned = result as this & IHasArgument;
-
-    if (original.arg) {
-      cloned.arg = original.arg.clone();
-    }
+    result.prefix = this.prefix;
+    result.shortPrefix = this.shortPrefix;
+    result.suffix = this.suffix;
 
     return result;
   }
 
-  equals(other: IFlag): boolean {
-    return this.name === other.name && this.shortName === other.shortName;
+  /**
+   * Returns if these two flags are equal.
+   * @param other Other flag.
+   */
+  equals(other: IFlag<T>): boolean {
+    return super.equals(other)
+      && this.name === other.name
+      && this.shortName === other.shortName;
   }
 }

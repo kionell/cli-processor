@@ -1,24 +1,10 @@
-import { ICloneable, IComparable } from './Types';
+import { IOption } from './IOption';
+import { InputData } from '../Types';
 
 /**
  * A command flag.
  */
-export interface IFlag extends ICloneable, IComparable {
-  /**
-   * The flag name.
-   */
-  name: string;
-
-  /**
-   * The flag shortened name.
-   */
-  shortName: string;
-
-  /**
-   * The flag description.
-   */
-  description: string;
-
+export interface IFlag<T extends InputData = InputData> extends IOption<T> {
   /**
    * The full prefix of this flag that will overwrite parser options.
    */
