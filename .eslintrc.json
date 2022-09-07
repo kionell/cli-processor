@@ -58,7 +58,7 @@
     "linebreak-style": "off",
     "multiline-comment-style": ["error", "starred-block"],
     "newline-per-chained-call": ["error", {
-      "ignoreChainWithDepth": 2
+      "ignoreChainWithDepth": 3
     }],
     "no-multiple-empty-lines": ["error", {
       "max": 1,
