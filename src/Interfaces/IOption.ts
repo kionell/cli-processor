@@ -16,6 +16,16 @@ export interface IOption<T extends InputData = InputData> extends ICloneable, IC
   shortName: string;
 
   /**
+   * The aliases for this option.
+   */
+  aliases: string[];
+
+  /**
+   * Custom key/value separator.
+   */
+  separator: string;
+
+  /**
    * Description of this option.
    */
   description: string;

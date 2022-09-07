@@ -17,6 +17,16 @@ export abstract class Option<T extends InputData = InputData> implements IOption
   shortName = '';
 
   /**
+   * The aliases for this option.
+   */
+  aliases: string[] = [];
+
+  /**
+   * Custom key/value separator.
+   */
+  separator = ' ';
+
+  /**
    * Description of this option.
    */
   description = '';
