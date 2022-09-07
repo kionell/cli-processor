@@ -26,7 +26,7 @@ export interface IOption<T extends InputData = InputData> extends ICloneable, IC
   shortDescription: string;
 
   /**
-   * What kind of value is expected from this option.
+   * This is used to describe what kind of value is expected from this option.
    */
   expected: string;
 

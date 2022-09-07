@@ -27,7 +27,7 @@ export abstract class Option<T extends InputData = InputData> implements IOption
   shortDescription = '';
 
   /**
-   * What kind of value is expected from this option.
+   * This is used to describe what kind of value is expected from this option.
    */
   expected = '';
 
