@@ -1,10 +1,12 @@
-import { ICloneable, IComparable } from './Types';
+import { ICloneable, IComparable, IStringable } from './Types';
 import { DataType, InputData, OptionType } from '../Types';
 
 /**
  * A command option.
  */
-export interface IOption<T extends InputData = InputData> extends ICloneable, IComparable {
+export interface IOption<T extends InputData = InputData>
+  extends ICloneable, IComparable, IStringable
+{
   /**
    * Full name of this option.
    */

@@ -1,11 +1,11 @@
 import { IOption } from './IOption';
-import { ICloneable, IComparable } from './Types';
+import { ICloneable, IComparable, IStringable } from './Types';
 import { OptionType } from '../Types';
 
 /**
  * A command.
  */
-export interface ICommand extends ICloneable, IComparable {
+export interface ICommand extends ICloneable, IComparable, IStringable {
   /**
    * The command name.
    */
