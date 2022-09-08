@@ -6,6 +6,7 @@ import {
 
 import {
   addDoubleQuotes,
+  convertFlagsToRegExp,
   splitByDoubleQuotes,
 } from '../Utils';
 
@@ -24,19 +25,24 @@ export class OptionParser {
   private _allowTooManyArgs = false;
 
   /** 
-   * The prefix of a shortened flag.
+   * A prefix for all shortened flags that will be considered by this parser.
    */
   private _shortPrefix?: string;
 
   /**
-   * The prefix of a full flag.
+   * A prefix for all full flags that will be considered by this parser.
    */
   private _fullPrefix?: string;
 
   /**
-   * The suffix of a flag.
+   * A suffix for all flags that will be considered by this parser.
    */
   private _suffix?: string;
+
+  /**
+   * A trimmable custom option key/value separator that will be considered by this parser.
+   */
+  private _separator?: string;
 
   /**
    * Array of all command flags.
@@ -47,6 +53,11 @@ export class OptionParser {
    * Array of all command arguments.
    */
   private _args: IOption[];
+
+  /**
+   * Mapping for all flag regular expressions.
+   */
+  private _flagRegexes: Map<IFlag, RegExp>;
 
   /**
    * Creates a new instance of a flag parser.
@@ -66,8 +77,15 @@ export class OptionParser {
     this._shortPrefix = config?.shortPrefix ?? this._shortPrefix;
     this._fullPrefix = config?.fullPrefix ?? this._fullPrefix;
     this._suffix = config?.suffix ?? this._suffix;
+    this._separator = config?.separator ?? this._separator;
     this._flags = config?.flags ?? [];
     this._args = config?.args ?? [];
+
+    this._flagRegexes = convertFlagsToRegExp(this._flags, {
+      fullPrefix: this._fullPrefix,
+      shortPrefix: this._shortPrefix,
+      suffix: this._suffix,
+    });
   }
 
   /**
@@ -76,7 +94,7 @@ export class OptionParser {
    * @returns Parsed command options of the current command level.
    */
   parse(input: string): IOption[] {
-    let values = splitByDoubleQuotes(input);
+    let values = this._removeSeparators(splitByDoubleQuotes(input));
 
     const parsed: IOption[] = [];
     const positions = this._findFlagPositions(values);
@@ -167,6 +185,64 @@ export class OptionParser {
     return parsed;
   }
 
+  private _removeSeparators(args: string[]): string[] {
+    return args.flatMap((arg) => {
+      const entry = this._findFlagRegexEntry(arg);
+
+      if (!entry) return arg;
+
+      const [flag, regex] = entry;
+
+      /**
+       * We split stuff through this weird way to make sure we don't 
+       * mess up with flags that have separator inside their name.
+       */
+      const secondPartWithSeparator = arg.replace(regex, '');
+
+      const separators = [flag.separator, ...flag.separatorAliases];
+
+      for (const separator of separators) {
+        if (separator === '' || !secondPartWithSeparator.startsWith(separator)) {
+          continue;
+        }
+
+        const secondPart = secondPartWithSeparator.substring(separator.length);
+
+        return [
+          arg.substring(0, arg.length - secondPart.length - separator.length),
+          secondPart,
+        ];
+      }
+
+      return arg;
+    });
+  }
+
+  private _findFlagPositions(args: string[]): Map<number, IFlag> {
+    const positions: Map<number, IFlag> = new Map<number, IFlag>();
+
+    args.forEach((arg, index) => {
+      const entry = this._findFlagRegexEntry(arg);
+
+      if (entry) positions.set(index, entry[0]);
+    });
+
+    return positions;
+  }
+
+  /**
+   * Tries to find an entry in the flag regexp map by input string.
+   * @param input An input string with possible flag.
+   * @return The found entry in the flag regexp map or null.
+   */
+  private _findFlagRegexEntry(input: string): [IFlag, RegExp] | null {
+    for (const entry of this._flagRegexes) {
+      if (entry[1].test(input)) return entry;
+    }
+
+    return null;
+  }
+
   /**
    * Validates specific option after setting a value.
    * @param option Option which will be validated.
@@ -216,38 +292,5 @@ export class OptionParser {
     }
 
     return true;
-  }
-
-  private _findFlagPositions(args: string[]): Map<number, IFlag> {
-    const positions: Map<number, IFlag> = new Map<number, IFlag>();
-
-    args.forEach((arg, index) => {
-      const flag = this._getFlagByNameOrShortname(arg);
-
-      if (flag) positions.set(index, flag);
-    });
-
-    return positions;
-  }
-
-  /**
-   * Tries to find a command from the commands list by name or alias.
-   * @param input Command name or alias.
-   * @return The found command or null.
-   */
-  private _getFlagByNameOrShortname(input: string): IFlag | null {
-    for (const flag of this._flags.values()) {
-      const shortPrefix = flag.shortPrefix ?? this._shortPrefix ?? '';
-      const fullPrefix = flag.prefix ?? this._fullPrefix ?? '';
-      const suffix = flag.suffix ?? this._suffix ?? '';
-
-      // Exact match by short version of a flag.
-      if (input === shortPrefix + flag.shortName + suffix) return flag;
-
-      // Exact match by full version of a flag.
-      if (input === fullPrefix + flag.name + suffix) return flag;
-    }
-
-    return null;
   }
 }

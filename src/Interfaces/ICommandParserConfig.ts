@@ -10,17 +10,17 @@ export interface ICommandParserConfig {
   commandPrefix?: string;
 
   /**
-   * A prefix of a shortened flag that will be considered by this parser.
+   * A prefix for all shortened flags that will be considered by this parser.
    */
   shortFlagPrefix?: string;
 
   /**
-   * A prefix of a full flag that will be considered by this parser.
+   * A prefix for all full flags that will be considered by this parser.
    */
   fullFlagPrefix?: string;
 
   /**
-   * A suffix of a flag that will be considered by this parser.
+   * A suffix for all flags that will be considered by this parser.
    */
   flagSuffix?: string;
 

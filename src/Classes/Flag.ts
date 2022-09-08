@@ -17,10 +17,25 @@ export class Flag<T extends InputData = InputData> extends Option<T> implements 
   shortPrefix = '-';
 
   /**
+   * The list of full prefix aliases for the flags.
+   */
+  prefixAliases: string[] = [];
+
+  /**
+   * The list of short prefix aliases for the flags.
+   */
+  shortPrefixAliases: string[] = [];
+
+  /**
    * The suffix of this flag.
    * Flag parser options will overwrite this.
    */
   suffix = '';
+
+  /**
+   * The list of suffix aliases for the flags.
+   */
+  suffixAliases: string[] = [];
 
   /**
    * The type of this option.

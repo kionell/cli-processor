@@ -16,19 +16,24 @@ export interface IOptionParserConfig {
   allowTooManyArgs?: boolean;
 
   /** 
-   * The prefix of a shortened flag.
+   * A prefix for all shortened flags that will be considered by this parser.
    */
-  shortPrefix?: string,
+  shortPrefix?: string;
 
   /**
-   * The prefix of a full flag.
+   * A prefix for all full flags that will be considered by this parser.
    */
-  fullPrefix?: string,
+  fullPrefix?: string;
 
   /**
-   * The suffix of a flag.
+   * A suffix for all flags that will be considered by this parser.
    */
   suffix?: string;
+
+  /**
+   * A trimmable custom option key/value separator that will be considered by this parser.
+   */
+  separator?: string;
 
   /**
    * Array of all flags of target commands.
