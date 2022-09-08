@@ -109,6 +109,11 @@ export interface IOption<T extends InputData = InputData>
   choices: T[];
 
   /**
+   * A regular expression to validate values for this option.
+   */
+  matchPattern: RegExp | null;
+
+  /**
    * @returns Raw input split into separate words.
    */
   keys(): Generator<string>

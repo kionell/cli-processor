@@ -314,8 +314,8 @@ export class OptionParser {
 
     const currentValue = option.getValue();
 
-    if (currentValue !== null && option.choices.length > 0) {
-      if (this._throwError && !option.choices.includes(currentValue)) {
+    if (currentValue !== null && option.matchPattern) {
+      if (this._throwError && !option.matchPattern.test(currentValue.toString())) {
         throw new Error(`Wrong value for ${option.name} option!`);
       }
 

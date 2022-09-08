@@ -93,6 +93,11 @@ export abstract class Option<T extends InputData = InputData> implements IOption
   choices: T[] = [];
 
   /**
+   * A regular expression to validate values for this option.
+   */
+  matchPattern: RegExp | null = null;
+
+  /**
    * The type of this option.
    */
   abstract type: OptionType;
