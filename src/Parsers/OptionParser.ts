@@ -250,9 +250,21 @@ export class OptionParser {
     for (const entry of this._flagRegexes) {
       const regex = entry[1];
 
-      if (regex[0].test(input) || regex[1].test(input)) {
-        return entry;
-      }
+      const longestRegex = regex[0].source.length > regex[1].source.length
+        ? regex[0]
+        : regex[1];
+
+      if (longestRegex.test(input)) return entry;
+    }
+
+    for (const entry of this._flagRegexes) {
+      const regex = entry[1];
+
+      const shortestRegex = regex[0].source.length > regex[1].source.length
+        ? regex[1]
+        : regex[0];
+
+      if (shortestRegex.test(input)) return entry;
     }
 
     return null;
