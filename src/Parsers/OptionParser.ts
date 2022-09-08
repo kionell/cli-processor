@@ -183,6 +183,10 @@ export class OptionParser {
       parsed.push(cloned);
     });
 
+    if (values.length > 0 && !this._allowTooManyArgs && this._throwError) {
+      throw new Error('Too many arguments!');
+    }
+
     return parsed;
   }
 
