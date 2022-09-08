@@ -57,7 +57,7 @@ export class OptionParser {
   /**
    * Mapping for all flag regular expressions.
    */
-  private _flagRegexes: Map<IFlag, RegExp>;
+  private _flagRegexes: Map<IFlag, RegExp[]>;
 
   /**
    * Creates a new instance of a flag parser.
@@ -191,13 +191,24 @@ export class OptionParser {
 
       if (!entry) return arg;
 
-      const [flag, regex] = entry;
+      const [flag, regexes] = entry;
 
       /**
        * We split stuff through this weird way to make sure we don't 
        * mess up with flags that have separator inside their name.
+       * First regex is for short version of a flag and the second is for full flags.
+       * Prioritize the longest regex from these two because 
+       * shorter one can sometimes replace only part of the string. 
        */
-      const secondPartWithSeparator = arg.replace(regex, '');
+      let [shorterRegex, longerRegex] = regexes;
+
+      if (shorterRegex.source.length > longerRegex.source.length) {
+        [shorterRegex, longerRegex] = [longerRegex, shorterRegex];
+      }
+
+      const secondPartWithSeparator = longerRegex.test(arg)
+        ? arg.replace(longerRegex, '')
+        : arg.replace(shorterRegex, '');
 
       const separators = [flag.separator, ...flag.separatorAliases];
 
@@ -235,9 +246,13 @@ export class OptionParser {
    * @param input An input string with possible flag.
    * @return The found entry in the flag regexp map or null.
    */
-  private _findFlagRegexEntry(input: string): [IFlag, RegExp] | null {
+  private _findFlagRegexEntry(input: string): [IFlag, RegExp[]] | null {
     for (const entry of this._flagRegexes) {
-      if (entry[1].test(input)) return entry;
+      const regex = entry[1];
+
+      if (regex[0].test(input) || regex[1].test(input)) {
+        return entry;
+      }
     }
 
     return null;

@@ -21,10 +21,10 @@ interface IFlagOptions {
  * @param flags The array of flags.
  * @param options Custom flag short prefix, full prefix & suffix. 
  * This is used when flag doesn't have it's own value.
- * @returns Map with flag as key and regular expression as value.
+ * @returns Map with flag as a key and regular expressions as a value.
  */
-export function convertFlagsToRegExp(flags: IFlag[], options?: IFlagOptions): Map<IFlag, RegExp> {
-  const regexMap = new Map<IFlag, RegExp>();
+export function convertFlagsToRegExp(flags: IFlag[], options?: IFlagOptions): Map<IFlag, RegExp[]> {
+  const regexMap = new Map<IFlag, RegExp[]>();
 
   for (const flag of flags) {
     regexMap.set(flag, convertFlagToRegExp(flag, options));
@@ -34,13 +34,13 @@ export function convertFlagsToRegExp(flags: IFlag[], options?: IFlagOptions): Ma
 }
 
 /**
- * Converts a flag to a regular expression that are used to match this flags.
+ * Converts a flag to the regular expressions that are used to match this flags.
  * @param flag The flag.
  * @param options Custom flag short prefix, full prefix & suffix. 
  * This is used when flag doesn't have it's own value.
- * @returns Regular expression for this flag.
+ * @returns Short and full regular expression for this flag.
  */
-export function convertFlagToRegExp(flag: IFlag, options?: IFlagOptions): RegExp {
+export function convertFlagToRegExp(flag: IFlag, options?: IFlagOptions): RegExp[] {
 
   const shortPrefix = flag.shortPrefix ?? options?.shortPrefix ?? '';
   const shortPrefixes = [shortPrefix, ...flag.shortPrefixAliases];
@@ -63,7 +63,10 @@ export function convertFlagToRegExp(flag: IFlag, options?: IFlagOptions): RegExp
     convertArrayToRegExpGroup(fullNames) +
     convertArrayToRegExpGroup(suffixes);
 
-  return new RegExp(`(${shortRegexString}|${fullRegexString})`);
+  return [
+    new RegExp(shortRegexString),
+    new RegExp(fullRegexString),
+  ];
 }
 
 export function convertArrayToRegExpGroup(arr: string[]): string {
