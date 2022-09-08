@@ -207,23 +207,22 @@ export class OptionParser {
         [shorterRegex, longerRegex] = [longerRegex, shorterRegex];
       }
 
-      const secondPartWithSeparator = longerRegex.test(arg)
+      const secondPart = longerRegex.test(arg)
         ? arg.replace(longerRegex, '')
         : arg.replace(shorterRegex, '');
+
+      const firstPartWithSeparator = arg.substring(0, arg.lastIndexOf(secondPart));
 
       const separators = [flag.separator, ...flag.separatorAliases];
 
       for (const separator of separators) {
-        if (separator === '' || !secondPartWithSeparator.startsWith(separator)) {
+        if (separator === '' || !firstPartWithSeparator.endsWith(separator)) {
           continue;
         }
 
-        const secondPart = secondPartWithSeparator.substring(separator.length);
+        const firstPart = firstPartWithSeparator.slice(0, -separator.length);
 
-        return [
-          arg.substring(0, arg.length - secondPart.length - separator.length),
-          secondPart,
-        ];
+        return [firstPart, secondPart];
       }
 
       return arg;
