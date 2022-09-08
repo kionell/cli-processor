@@ -13,6 +13,7 @@ interface IFlagOptions {
   shortPrefix?: string;
   fullPrefix?: string;
   suffix?: string;
+  separator?: string;
 }
 
 /**
@@ -36,7 +37,7 @@ export function convertFlagsToRegExp(flags: IFlag[], options?: IFlagOptions): Ma
 /**
  * Converts a flag to the regular expressions that are used to match this flags.
  * @param flag The flag.
- * @param options Custom flag short prefix, full prefix & suffix. 
+ * @param options Custom flag short prefix, full prefix, suffix and separator. 
  * This is used when flag doesn't have it's own value.
  * @returns Short and full regular expression for this flag.
  */
@@ -53,15 +54,20 @@ export function convertFlagToRegExp(flag: IFlag, options?: IFlagOptions): RegExp
   const suffix = flag.suffix ?? options?.suffix ?? '';
   const suffixes = [suffix, ...flag.suffixAliases];
 
+  const separator = flag.separator ?? options?.separator ?? '';
+  const separators = [separator, ...flag.separatorAliases].map((s) => s.trim());
+
   const shortRegexString = '^' +
     convertArrayToRegExpGroup(shortPrefixes) +
     convertArrayToRegExpGroup(shortNames) +
-    convertArrayToRegExpGroup(suffixes);
+    convertArrayToRegExpGroup(suffixes) +
+    convertArrayToRegExpGroup(separators, true);
 
   const fullRegexString = '^' +
     convertArrayToRegExpGroup(fullPrefixes) +
     convertArrayToRegExpGroup(fullNames) +
-    convertArrayToRegExpGroup(suffixes);
+    convertArrayToRegExpGroup(suffixes) +
+    convertArrayToRegExpGroup(separators, true);
 
   return [
     new RegExp(shortRegexString),
@@ -69,13 +75,22 @@ export function convertFlagToRegExp(flag: IFlag, options?: IFlagOptions): RegExp
   ];
 }
 
-export function convertArrayToRegExpGroup(arr: string[]): string {
-  const nonEmptyArgs = arr.filter((x) => x);
+/**
+ * Converts an array of strings to a stringified regex group.
+ * @param arr The array of strings.
+ * @param end Is this group at the end of a line?
+ * @returns Stringified regex group.
+ */
+export function convertArrayToRegExpGroup(arr: string[], end = false): string {
+  const filteredArgs = end ? arr : arr.filter((x) => x);
 
-  if (nonEmptyArgs.length === 0) return '';
+  if (filteredArgs.length === 0) return '';
 
-  const group = nonEmptyArgs.map(escapeRegExp).join('|');
-  const suffix = arr.includes('') ? '?' : '';
+  const group = filteredArgs.map((arg) => {
+    return end && arg === '' ? '$' : escapeRegExp(arg);
+  });
 
-  return '(' + group + ')' + suffix;
+  const suffix = end || !arr.includes('') ? '' : '?';
+
+  return '(' + group.join('|') + ')' + suffix;
 }

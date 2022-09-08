@@ -85,6 +85,7 @@ export class OptionParser {
       fullPrefix: this._fullPrefix,
       shortPrefix: this._shortPrefix,
       suffix: this._suffix,
+      separator: this._separator,
     });
   }
 
