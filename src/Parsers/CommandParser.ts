@@ -146,7 +146,16 @@ export class CommandParser {
        */
       const target = args.map((a) => a.includes(' ') ? `"${a}"` : a).join(' ');
 
-      command.options = this._getOptionParser(command).parse(target);
+      const parsedOptions = this._getOptionParser(command).parse(target);
+
+      /**
+       * Override only parsed options instead of full replacing of the array.
+       */
+      for (const option of parsedOptions) {
+        const index = command.options.findIndex((o) => o.name === option.name);
+
+        if (index !== -1) command.options[index] = option;
+      }
     }
 
     data.prefix = this._prefix;
