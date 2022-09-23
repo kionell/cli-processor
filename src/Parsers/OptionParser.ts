@@ -144,10 +144,15 @@ export class OptionParser {
         values[currentPos] = '';
       }
 
-      /**
-       * We need to double quote all arguments before adding a new value.
-       */
-      cloned.setValue(collected.map(addDoubleQuotes).join(' '));
+      if (collected.length > 0) {
+        /**
+         * We need to double quote all arguments before adding a new value.
+         */
+        cloned.setValue(collected.map(addDoubleQuotes).join(' '));
+      }
+      else {
+        cloned.setValue(null);
+      }
 
       this._validateOption(cloned);
 

@@ -148,6 +148,14 @@ export abstract class Option<T extends InputData = InputData> implements IOption
   }
 
   getValue(): T | null {
+    /**
+     * Shorthand for boolean options.
+     * If it was specified without value than it's true by default.
+     */
+    if (this.dataType === DataType.Boolean && this._value === null) {
+      return true as T;
+    }
+
     return this._value && this._castValue(this._value);
   }
 
@@ -185,14 +193,39 @@ export abstract class Option<T extends InputData = InputData> implements IOption
    */
   private _castValue(value: unknown): T {
     switch (this.dataType) {
-      case DataType.Boolean:
-        return Boolean(value) as T;
+      case DataType.Boolean: {
+        const stringified = String(value);
 
-      case DataType.Integer:
-        return (parseInt(value as string) || Number()) as T;
+        if (stringified === 'true' || stringified === '1') {
+          return true as T;
+        }
 
-      case DataType.Float:
-        return (parseFloat(value as string) || Number()) as T;
+        if (stringified === 'false' || stringified === '0') {
+          return false as T;
+        }
+
+        throw new Error(`Failed to cast value to boolean for ${this.name} flag. Value: ${value}`);
+      }
+
+      case DataType.Integer: {
+        const casted = parseInt(value as string);
+
+        if (isNaN(casted)) {
+          throw new Error(`Failed to cast value to integer for ${this.name} flag. Value: ${value}`);
+        }
+
+        return casted as T;
+      }
+
+      case DataType.Float: {
+        const casted = parseFloat(value as string);
+
+        if (isNaN(casted)) {
+          throw new Error(`Failed to cast value to float for ${this.name} flag. Value: ${value}`);
+        }
+
+        return casted as T;
+      }
     }
 
     return (value ? String(value) : String()) as T;
