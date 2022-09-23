@@ -140,9 +140,10 @@ export class CommandParser {
       /**
        * Wrap args with double quotes if they have spaces.
        * This is done because nested parsers was written as independent modules.
-       * Flag & argument parsers will split string by double quotes by themselves.
+       * Option parser will split string by double quotes on its own.
        * Args that was quoted from the beginning must contain their spaces.
-       * Additional splitting of an already split line will remove those spaces. 
+       * Additional splitting of an already split line will remove 
+       * those spaces breaking the original state of the argument.
        */
       const target = args.map((a) => a.includes(' ') ? `"${a}"` : a).join(' ');
 
