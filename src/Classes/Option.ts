@@ -52,6 +52,11 @@ export abstract class Option<T extends InputData = InputData> implements IOption
   expected = '';
 
   /**
+   * Example of the possible values for this option.
+   */
+  examples: string[] = [];
+
+  /**
    * Whether the option is required or not.
    */
   isRequired = false;

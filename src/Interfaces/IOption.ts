@@ -53,6 +53,11 @@ export interface IOption<T extends InputData = InputData>
   expected: string;
 
   /**
+   * Example of the possible values for this option.
+   */
+  examples: string[];
+
+  /**
    * Whether the option is required or not.
    */
   isRequired: boolean;
