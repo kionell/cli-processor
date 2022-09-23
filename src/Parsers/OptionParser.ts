@@ -10,6 +10,8 @@ import {
   splitByDoubleQuotes,
 } from '../Utils';
 
+import { DataType } from '../Types';
+
 /**
  * A command option parser.
  */
@@ -149,6 +151,13 @@ export class OptionParser {
          * We need to double quote all arguments before adding a new value.
          */
         cloned.setValue(collected.map(addDoubleQuotes).join(' '));
+      }
+      else if (cloned.dataType === DataType.Boolean) {
+        /**
+         * Shorthand for boolean options.
+         * If it was specified without value than it's true by default.
+         */
+        cloned.setValue(true);
       }
       else {
         cloned.setValue(null);

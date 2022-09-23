@@ -148,14 +148,6 @@ export abstract class Option<T extends InputData = InputData> implements IOption
   }
 
   getValue(): T | null {
-    /**
-     * Shorthand for boolean options.
-     * If it was specified without value than it's true by default.
-     */
-    if (this.dataType === DataType.Boolean && this._value === null) {
-      return true as T;
-    }
-
     return this._value && this._castValue(this._value);
   }
 
