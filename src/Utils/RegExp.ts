@@ -71,8 +71,8 @@ export function convertFlagToRegExp(flag: IFlag, options?: IFlagOptions): RegExp
     convertArrayToRegExpGroup(separators, true);
 
   return [
-    new RegExp(shortRegexString, options?.caseSensitive ? 'i' : ''),
-    new RegExp(fullRegexString, options?.caseSensitive ? 'i' : ''),
+    new RegExp(shortRegexString, options?.caseSensitive ? '' : 'i'),
+    new RegExp(fullRegexString, options?.caseSensitive ? '' : 'i'),
   ];
 }
 
