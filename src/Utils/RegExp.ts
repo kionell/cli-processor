@@ -14,6 +14,7 @@ interface IFlagOptions {
   fullPrefix?: string;
   suffix?: string;
   separator?: string;
+  caseSensitive?: boolean;
 }
 
 /**
@@ -70,8 +71,8 @@ export function convertFlagToRegExp(flag: IFlag, options?: IFlagOptions): RegExp
     convertArrayToRegExpGroup(separators, true);
 
   return [
-    new RegExp(shortRegexString),
-    new RegExp(fullRegexString),
+    new RegExp(shortRegexString, options?.caseSensitive ? 'i' : ''),
+    new RegExp(fullRegexString, options?.caseSensitive ? 'i' : ''),
   ];
 }
 

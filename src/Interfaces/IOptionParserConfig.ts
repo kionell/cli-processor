@@ -15,6 +15,11 @@ export interface IOptionParserConfig {
    */
   allowTooManyArgs?: boolean;
 
+  /**
+   * Are option names case sensitive?
+   */
+  caseSensitive?: boolean;
+
   /** 
    * A prefix for all shortened flags that will be considered by this parser.
    */

@@ -26,6 +26,11 @@ export class OptionParser {
    */
   private _allowTooManyArgs = false;
 
+  /**
+   * Are option names case sensitive? Use non-sensitive parsing by default.
+   */
+  private _caseSensitive = false;
+
   /** 
    * A prefix for all shortened flags that will be considered by this parser.
    */
@@ -76,6 +81,7 @@ export class OptionParser {
 
     this._throwError = config?.throwError ?? this._throwError;
     this._allowTooManyArgs = config?.allowTooManyArgs ?? this._allowTooManyArgs;
+    this._caseSensitive = config?.caseSensitive ?? this._caseSensitive;
     this._shortPrefix = config?.shortPrefix ?? this._shortPrefix;
     this._fullPrefix = config?.fullPrefix ?? this._fullPrefix;
     this._suffix = config?.suffix ?? this._suffix;
