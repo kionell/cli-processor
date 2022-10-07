@@ -169,7 +169,6 @@ export class Command implements ICommand {
       description: this.description,
       shortDescription: this.shortDescription,
       examples: this.examples,
-      options: this.options.map((o) => o.clone()),
       execute: this.execute,
     });
 
