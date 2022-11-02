@@ -1,6 +1,6 @@
 {
   "name": "cli-processor",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "description": "A basic command line parser for any CLI",
   "exports": {
     "import": "./lib/index.mjs",
