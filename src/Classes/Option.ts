@@ -139,6 +139,13 @@ export abstract class Option<T extends InputData = InputData> implements IOption
     return this._raw.length;
   }
 
+  /**
+   * Raw argument value without double quotes.
+   */
+  get raw(): string {
+    return this._raw.join(' ');
+  }
+
   *keys(): Generator<string> {
     for (const v of this._raw) yield v;
   }

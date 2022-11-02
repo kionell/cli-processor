@@ -119,6 +119,11 @@ export interface IOption<T extends InputData = InputData>
   matchPattern: RegExp | null;
 
   /**
+   * Raw argument value without double quotes.
+   */
+  raw: string;
+
+  /**
    * @returns Raw input split into separate words.
    */
   keys(): Generator<string>
